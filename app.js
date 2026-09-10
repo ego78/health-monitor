@@ -66,7 +66,59 @@ $$('[data-modal]').forEach(b=>b.onclick=()=>{const d=$('#'+b.dataset.modal),f=d.
 $$('[data-close]').forEach(b=>b.onclick=()=>b.closest('dialog').close());
 $('#settingsBtn').onclick=()=>{$('#apiUrl').value=cfg().url;$('#apiToken').value=cfg().token;$('#settingsModal').showModal()};$$('[data-open-settings]').forEach(b=>b.onclick=()=>$('#settingsBtn').click());$('#themeBtn').onclick=()=>applyTheme(document.body.classList.contains('dark')?'light':'dark');
 $('#saveSettings').onclick=e=>{e.preventDefault();localStorage.setItem('hm_api_url',$('#apiUrl').value.trim());localStorage.setItem('hm_api_token',$('#apiToken').value.trim());$('#settingsModal').close();refresh()};
-$$('.dataForm').forEach(form=>form.addEventListener('submit',async e=>{e.preventDefault();if(!form.reportValidity())return;const entity=form.dataset.entity;const fd=new FormData(form),data=Object.fromEntries(fd.entries());const id=data.id;delete data.id;[...form.elements].filter(x=>x.type==='checkbox').forEach(x=>data[x.name]=x.checked);['systolic','diastolic','pulse','weightKg','waistCm','value','refMin','refMax','kcal','carbsG','weightStart','weightEnd'].forEach(k=>{if(k in data)data[k]=data[k]===''?'':Number(data[k])});const submit=form.querySelector('button[type=submit],button.primary:last-child');const oldText=submit?.textContent;if(submit){submit.disabled=true;submit.textContent='Salvataggio…'}try{const r=await apiPost({action:id?'update':'create',entity,id,data});if(id){const i=S[entity].findIndex(x=>x.id===id);if(i>=0)S[entity][i]=r.data}else S[entity].push(r.data);form.closest('dialog').close();renderAll();toast('Dato salvato correttamente')}catch(err){console.error(err);toast('Errore: '+err.message);alert('Impossibile salvare il dato.\n\n'+err.message+'\n\nControlla URL API e token nelle Impostazioni.')}finally{if(submit){submit.disabled=false;submit.textContent=oldText}}}));
+$$('.dataForm').forEach(form=>form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(!form.reportValidity()) return;
+
+  const entity=form.dataset.entity;
+  const fd=new FormData(form), data=Object.fromEntries(fd.entries());
+  const id=data.id; delete data.id;
+  [...form.elements].filter(x=>x.type==='checkbox').forEach(x=>data[x.name]=x.checked);
+  ['systolic','diastolic','pulse','weightKg','waistCm','value','refMin','refMax','kcal','carbsG','weightStart','weightEnd']
+    .forEach(k=>{if(k in data)data[k]=data[k]===''?'':Number(data[k])});
+
+  const dlg=form.closest('dialog');
+  const submit=form.querySelector('button[type=submit],button.primary:last-child');
+  const oldText=submit?.textContent;
+  if(submit){submit.disabled=true;submit.textContent='Salvataggio…'}
+
+  /* Su Android/PWA Apps Script può completare la scrittura prima che fetch
+     restituisca la risposta. Chiudiamo quindi il dialog subito dopo l'invio:
+     il salvataggio continua in background e poi sincronizziamo dal server. */
+  const request=apiPost({action:id?'update':'create',entity,id,data});
+  setTimeout(()=>{ if(dlg?.open) dlg.close(); }, 250);
+
+  try{
+    const r=await Promise.race([
+      request,
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error('__SAVE_RESPONSE_TIMEOUT__')),7000))
+    ]);
+    if(id){
+      const i=S[entity].findIndex(x=>x.id===id);
+      if(i>=0 && r?.data) S[entity][i]=r.data;
+    } else if(r?.data) {
+      S[entity].push(r.data);
+    }
+    renderAll();
+    toast('Dato salvato correttamente');
+  }catch(err){
+    console.warn(err);
+    if(err.message==='__SAVE_RESPONSE_TIMEOUT__'){
+      toast('Dato inviato. Sincronizzo…');
+      try{ await refresh(); }catch(_){}
+    }else{
+      toast('Verifico il salvataggio…');
+      try{
+        await refresh();
+      }catch(_){
+        alert('Non riesco a verificare il salvataggio. Controlla la connessione e riprova.');
+      }
+    }
+  }finally{
+    if(dlg?.open) dlg.close();
+    if(submit){submit.disabled=false;submit.textContent=oldText}
+  }
+}));
 $('#dashboardRange').onchange=renderTrend;$('#labSearch').oninput=renderLabs;$('#labParameter').onchange=renderLabs;$('#medTypeFilter').onchange=renderMeds;$('#medActiveFilter').onchange=renderMeds;$('#runCompare').onclick=renderCompare;$('#refreshBtn').onclick=refresh;
 function download(name,text,type='application/json'){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 $('#exportJsonBtn').onclick=()=>download(`health-monitor-${today()}.json`,JSON.stringify(S,null,2));

@@ -75,3 +75,10 @@ Su GitHub sostituisci `index.html`, `style.css`, `app.js`, `manifest.json` e `sw
 
 ## V2.3 fix salvataggio
 Corretto l'invio POST verso Google Apps Script usando `application/x-www-form-urlencoded` con campo `payload`, compatibile con `parseBody_()` del backend esistente. Non serve modificare o ridistribuire Code.gs.
+
+
+## V2.4
+- Correzione chiusura automatica di tutti i popup dopo l'invio.
+- Pulsanti Annulla/Salva sempre visibili e fissi in basso nei popup su smartphone.
+- Sincronizzazione automatica dopo salvataggi Apps Script lenti su Android/PWA.
+- Cache PWA aggiornata.
