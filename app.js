@@ -8,6 +8,30 @@ const n=v=>v===''||v==null?null:Number(v);
 const avg=a=>a.length?a.reduce((x,y)=>x+Number(y||0),0)/a.length:null;
 const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 
+const tabMeta={
+  dashboard:['Dashboard','Panoramica dei tuoi dati di salute'],
+  pressure:['Pressione','Misurazioni e andamento pressorio'],
+  weight:['Peso corporeo','Peso e circonferenza vita'],
+  labs:['Analisi','Valori di laboratorio nel tempo'],
+  diets:['Diete','Periodi alimentari e variazioni'],
+  meds:['Farmaci / integratori','Terapie e integrazione'],
+  compare:['Confronta','Relazioni temporali tra i tuoi dati'],
+  data:['Gestione dati','Sincronizzazione ed esportazione']
+};
+function applyTheme(mode){
+  const dark=mode==='dark';document.body.classList.toggle('dark',dark);localStorage.setItem('hm_theme',mode);
+  const b=$('#themeBtn');if(b)b.textContent=dark?'☀':'☾';
+  if(window.Chart){Chart.defaults.color=dark?'#a9bad1':'#66758f';Chart.defaults.borderColor=dark?'rgba(145,164,192,.18)':'rgba(100,116,139,.14)'}
+  if(Object.values(S).some(a=>a.length))renderAll();
+}
+function openTab(tab){
+  $$('[data-tab]').forEach(x=>x.classList.toggle('active',x.dataset.tab===tab));
+  $$('.view').forEach(x=>x.classList.toggle('active',x.id===tab));
+  const meta=tabMeta[tab]||[tab,''];if($('#pageTitle'))$('#pageTitle').textContent=meta[0];if($('#pageSubtitle'))$('#pageSubtitle').textContent=meta[1];
+  window.scrollTo({top:0,behavior:'smooth'});if(tab==='compare')renderCompare();
+}
+
+
 async function apiGet(action='bootstrap',params={}){const c=cfg();if(!c.url||!c.token)throw new Error('Configurazione API mancante');const u=new URL(c.url);u.searchParams.set('action',action);u.searchParams.set('token',c.token);Object.entries(params).forEach(([k,v])=>u.searchParams.set(k,v));const r=await fetch(u.toString(),{redirect:'follow'});const j=await r.json();if(!j.ok)throw new Error(j.error||'Errore API');return j}
 async function apiPost(body){const c=cfg();if(!c.url||!c.token)throw new Error('Configurazione API mancante');const payload=JSON.stringify({...body,token:c.token});const r=await fetch(c.url,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:payload,redirect:'follow'});const j=await r.json();if(!j.ok)throw new Error(j.error||'Errore API');return j}
 
@@ -37,10 +61,10 @@ function table(target,rows,cols,entity){$(target).innerHTML=rows.length?`<table>
 window.deleteRecord=async(entity,id)=>{if(!confirm('Eliminare questo record?'))return;try{await apiPost({action:'delete',entity,id});S[entity]=S[entity].filter(x=>x.id!==id);renderAll();toast('Eliminato')}catch(e){toast(e.message)}};
 window.editRecord=(entity,id)=>{const rec=S[entity].find(x=>x.id===id);const modalId={PRESSURE:'pressureModal',WEIGHT:'weightModal',LABS:'labModal',DIETS:'dietModal',MEDS:'medModal'}[entity];const dlg=$('#'+modalId),form=dlg.querySelector('form');Object.entries(rec||{}).forEach(([k,v])=>{const el=form.elements[k];if(!el)return;if(el.type==='checkbox')el.checked=String(v)==='true'||v===true;else if(el.type==='datetime-local')el.value=String(v).slice(0,16);else el.value=v??''});dlg.showModal()};
 
-$$('[data-tab]').forEach(b=>b.onclick=()=>{$$('[data-tab]').forEach(x=>x.classList.remove('active'));$$('.view').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('#'+b.dataset.tab).classList.add('active');if(b.dataset.tab==='compare')renderCompare()});
+$$('[data-tab]').forEach(b=>b.onclick=()=>openTab(b.dataset.tab));
 $$('[data-modal]').forEach(b=>b.onclick=()=>{const d=$('#'+b.dataset.modal),f=d.querySelector('form');if(f){f.reset();if(f.elements.id)f.elements.id.value='';if(f.elements.datetime)f.elements.datetime.value=nowLocal();if(f.elements.date)f.elements.date.value=today();if(f.elements.startDate)f.elements.startDate.value=today();if(f.elements.active)f.elements.active.checked=true}d.showModal()});
 $$('[data-close]').forEach(b=>b.onclick=()=>b.closest('dialog').close());
-$('#settingsBtn').onclick=()=>{$('#apiUrl').value=cfg().url;$('#apiToken').value=cfg().token;$('#settingsModal').showModal()};$$('[data-open-settings]').forEach(b=>b.onclick=()=>$('#settingsBtn').click());
+$('#settingsBtn').onclick=()=>{$('#apiUrl').value=cfg().url;$('#apiToken').value=cfg().token;$('#settingsModal').showModal()};$$('[data-open-settings]').forEach(b=>b.onclick=()=>$('#settingsBtn').click());$('#themeBtn').onclick=()=>applyTheme(document.body.classList.contains('dark')?'light':'dark');
 $('#saveSettings').onclick=e=>{e.preventDefault();localStorage.setItem('hm_api_url',$('#apiUrl').value.trim());localStorage.setItem('hm_api_token',$('#apiToken').value.trim());$('#settingsModal').close();refresh()};
 $$('.dataForm').forEach(form=>form.addEventListener('submit',async e=>{e.preventDefault();const entity=form.dataset.entity;const fd=new FormData(form),data=Object.fromEntries(fd.entries());const id=data.id;delete data.id;[...form.elements].filter(x=>x.type==='checkbox').forEach(x=>data[x.name]=x.checked);['systolic','diastolic','pulse','weightKg','waistCm','value','refMin','refMax','kcal','carbsG','weightStart','weightEnd'].forEach(k=>{if(k in data)data[k]=data[k]===''?'':Number(data[k])});try{const r=await apiPost({action:id?'update':'create',entity,id,data});if(id){const i=S[entity].findIndex(x=>x.id===id);S[entity][i]=r.data}else S[entity].push(r.data);form.closest('dialog').close();renderAll();toast('Salvato')}catch(err){toast(err.message)}}));
 $('#dashboardRange').onchange=renderTrend;$('#labSearch').oninput=renderLabs;$('#labParameter').onchange=renderLabs;$('#medTypeFilter').onchange=renderMeds;$('#medActiveFilter').onchange=renderMeds;$('#runCompare').onclick=renderCompare;$('#refreshBtn').onclick=refresh;
@@ -48,4 +72,12 @@ function download(name,text,type='application/json'){const a=document.createElem
 $('#exportJsonBtn').onclick=()=>download(`health-monitor-${today()}.json`,JSON.stringify(S,null,2));
 $('#exportCsvBtn').onclick=()=>{const lines=[];Object.entries(S).forEach(([entity,rows])=>{lines.push(entity);if(rows.length){const h=Object.keys(rows[0]);lines.push(h.join(';'));rows.forEach(r=>lines.push(h.map(k=>'"'+String(r[k]??'').replace(/"/g,'""')+'"').join(';')))}lines.push('')});download(`health-monitor-${today()}.csv`,lines.join('\n'),'text/csv;charset=utf-8')};
 if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(console.warn);
+applyTheme(localStorage.getItem('hm_theme')||((window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light'));
 if(cfg().url&&cfg().token)refresh();else $('#setupBanner').classList.remove('hidden');
+
+
+// V2 UI enhancements
+const TAB_META={dashboard:['Dashboard','Panoramica dei tuoi dati di salute'],pressure:['Pressione','Storico di sistolica, diastolica e frequenza cardiaca'],weight:['Peso corporeo','Monitora peso e circonferenza vita'],labs:['Analisi','Segui i parametri di laboratorio nel tempo'],diets:['Periodi alimentari','Collega alimentazione, peso e pressione'],meds:['Farmaci & integratori','Registra terapie e supplementi nel tempo'],compare:['Confronta','Analizza le relazioni temporali tra i tuoi dati'],data:['Dati & backup','Sincronizzazione, privacy ed esportazione']};
+function syncTabUI(id){$$('[data-tab]').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));$$('.view').forEach(x=>x.classList.toggle('active',x.id===id));const m=TAB_META[id]||TAB_META.dashboard;if($('#pageTitle'))$('#pageTitle').textContent=m[0];if($('#pageSubtitle'))$('#pageSubtitle').textContent=m[1];if(id==='compare')renderCompare();window.scrollTo({top:0,behavior:'smooth'});}
+$$('[data-tab]').forEach(b=>b.onclick=()=>syncTabUI(b.dataset.tab));
+const savedTheme=localStorage.getItem('hm_theme')||'light';document.documentElement.dataset.theme=savedTheme;function syncThemeIcon(){if($('#themeBtn'))$('#themeBtn').textContent=document.documentElement.dataset.theme==='dark'?'☀':'☾'}syncThemeIcon();if($('#themeBtn'))$('#themeBtn').onclick=()=>{const next=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=next;localStorage.setItem('hm_theme',next);syncThemeIcon();};

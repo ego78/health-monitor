@@ -1,53 +1,73 @@
-# Health Monitor — GitHub Pages + Google Apps Script
+# Health Monitor V2
 
-Web app personale per registrare e confrontare pressione arteriosa, frequenza cardiaca, peso, analisi di laboratorio, periodi di dieta, farmaci e integratori.
+Web app personale per registrare e confrontare:
 
-## 1. Crea il backend Apps Script
-1. Vai su https://script.google.com e crea un nuovo progetto.
-2. Rinominalo `Health Monitor API`.
-3. Sostituisci il contenuto di `Code.gs` con il file `Code.gs` di questo repository.
-4. In **Impostazioni progetto**, imposta il fuso orario su `Europe/Rome`.
-5. Dall'editor seleziona la funzione `setupDatabase` e premi **Esegui**.
-6. Autorizza lo script. Il risultato dell'esecuzione contiene `spreadsheetUrl` e `accessToken`. Copia il token in un posto sicuro.
-7. Apri il Google Sheet creato automaticamente per verificare i fogli: `PRESSURE`, `WEIGHT`, `LABS`, `DIETS`, `MEDS`, `EVENTS`, `SETTINGS`.
+- pressione arteriosa e frequenza cardiaca
+- peso e circonferenza vita
+- valori delle analisi
+- periodi alimentari/diete
+- farmaci e integratori
+- correlazioni temporali tra i dati
 
-## 2. Pubblica Apps Script come Web App
-1. **Esegui il deployment > Nuovo deployment**.
-2. Tipo: **Applicazione web**.
-3. Esegui come: **Me**.
-4. Accesso: scegli l'opzione che consente alla tua app GitHub di chiamare il servizio. Il token applicativo aggiunge un secondo controllo di accesso.
-5. Distribuisci e copia l'URL che termina in `/exec`.
+## Architettura
 
-> Nota privacy: non mettere l'access token nel repository GitHub. L'interfaccia lo salva nel `localStorage` del browser in cui configuri l'app.
+- **GitHub Pages**: interfaccia/PWA
+- **Google Apps Script**: API
+- **Google Sheets**: database personale
 
-## 3. Pubblica il frontend su GitHub Pages
-1. Crea un nuovo repository, per esempio `health-monitor`.
-2. Carica nella root: `index.html`, `style.css`, `app.js`, `manifest.json`, `sw.js` e questo README. `Code.gs` può restare nel repo come copia del backend, perché non contiene il token.
-3. Vai su **Settings > Pages**.
-4. Source: `Deploy from a branch`.
-5. Branch: `main`, cartella `/root`, quindi **Save**.
-6. Apri l'indirizzo GitHub Pages generato.
-7. Premi ⚙️, incolla URL `/exec` e access token, quindi **Salva**.
+Il token di accesso non va scritto nel repository GitHub: viene salvato localmente nel browser tramite `localStorage`.
 
-## 4. Installazione sul telefono
-Apri la GitHub Page da Chrome su Android e usa **Aggiungi a schermata Home / Installa app**. La PWA conserva la shell dell'interfaccia anche offline; per sincronizzare i dati serve connessione.
+## Aggiornamento dalla V1 alla V2
 
-## Funzioni incluse
-- Dashboard con media pressione 7 giorni, peso, numero misurazioni e dieta attiva.
-- Pressione: sistolica, diastolica, battiti, posizione, braccio, contesto, note.
-- Peso e circonferenza vita.
-- Analisi con parametri liberi, unità e range di riferimento.
-- Periodi di dieta con date, calorie, carboidrati e peso iniziale/finale.
-- Farmaci e integratori con dose, frequenza, orario, date e stato attivo.
-- Grafici con Chart.js.
-- Confronto pressione/peso/analisi su un unico periodo.
-- Timeline dei periodi di dieta e trattamento sovrapposti al periodo analizzato.
-- Modifica ed eliminazione record.
-- Esportazione JSON e CSV.
-- Sincronizzazione manuale.
-- Token ruotabile con `rotateAccessToken()`.
+Se hai già configurato Apps Script e Google Sheet, **non devi rifare il database** e puoi lasciare invariato `Code.gs`.
 
-## Limiti e sicurezza
-Questa app è un diario personale, non un dispositivo medico. Le correlazioni visualizzate sono temporali e non dimostrano causalità. Non modificare o sospendere farmaci sulla base dei grafici senza confronto con un professionista sanitario.
+Nel repository GitHub sostituisci/carica:
 
-Se un token viene esposto, esegui `rotateAccessToken()` in Apps Script e aggiorna il token nelle impostazioni della web app.
+- `index.html`
+- `style.css`
+- `app.js`
+- `manifest.json`
+- `sw.js`
+- cartella `icons/`
+
+Dopo il commit, GitHub Pages pubblicherà automaticamente la nuova versione. Se sul telefono compare ancora la grafica vecchia, chiudi la PWA/browser e riaprila; il service worker V2 sostituisce la cache precedente.
+
+## Nuove funzioni grafiche V2
+
+- dashboard desktop con menu laterale
+- navigazione mobile inferiore
+- pulsanti di inserimento rapido
+- modalità chiara/scura, salvata sul dispositivo
+- card salute e pannelli responsive
+- modali ridisegnati
+- icona PWA dedicata
+- favicon e Apple Touch Icon
+- manifest PWA completo
+
+## Icone incluse
+
+- `icons/icon-512.png`
+- `icons/icon-192.png`
+- `icons/apple-touch-icon.png`
+- `icons/favicon-32.png`
+- `icons/icon.svg`
+
+## Collegamento Apps Script
+
+Apri Health Monitor, premi **Impostazioni**, quindi inserisci:
+
+1. URL della Web App Apps Script che termina in `/exec`
+2. ACCESS_TOKEN creato dal backend
+
+Premi **Salva collegamento**.
+
+## Nota sui confronti
+
+I grafici mostrano associazioni temporali tra i dati inseriti. Non stabiliscono da soli un rapporto causa-effetto tra pressione, peso, dieta, farmaci, integratori o risultati di laboratorio.
+
+
+## V2 grafica e PWA
+Questa versione include una nuova dashboard responsive, menu laterale desktop, barra inferiore mobile, tema chiaro/scuro, azioni rapide e set completo di icone PWA.
+
+### Aggiornamento da V1
+Su GitHub sostituisci `index.html`, `style.css`, `app.js`, `manifest.json` e `sw.js`, quindi aggiungi la cartella `icons/`. `Code.gs` può restare invariato. Dopo il commit, ricarica la pagina forzando l'aggiornamento (Ctrl+F5) oppure chiudi e riapri la PWA installata.

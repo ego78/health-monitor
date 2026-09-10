@@ -1,111 +1,104 @@
 <!doctype html>
-<html lang="it">
+<html lang="it" data-theme="light">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#0f172a" />
+  <meta name="theme-color" content="#0b5cff" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Health Monitor" />
   <title>Health Monitor</title>
   <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
 <body>
-  <header class="topbar">
-    <div><strong>Health Monitor</strong><small>Pressione • Peso • Analisi • Dieta • Terapie</small></div>
-    <button id="settingsBtn" class="iconBtn" aria-label="Impostazioni">⚙️</button>
-  </header>
-
-  <main>
-    <section id="setupBanner" class="banner hidden">Configura l'endpoint Apps Script e il token per iniziare. <button data-open-settings>Configura</button></section>
-
-    <nav class="tabs" id="tabs">
-      <button class="active" data-tab="dashboard">Dashboard</button>
-      <button data-tab="pressure">Pressione</button>
-      <button data-tab="weight">Peso</button>
-      <button data-tab="labs">Analisi</button>
-      <button data-tab="diets">Diete</button>
-      <button data-tab="meds">Farmaci/Integratori</button>
-      <button data-tab="compare">Confronta</button>
-      <button data-tab="data">Dati</button>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><img src="icons/icon-96.png" alt=""><div><strong>Health Monitor</strong><small>I tuoi dati, la tua salute</small></div></div>
+    <nav class="side-nav">
+      <button class="active" data-tab="dashboard"><span>⌂</span>Dashboard</button>
+      <button data-tab="pressure"><span>♥</span>Pressione</button>
+      <button data-tab="weight"><span>⚖</span>Peso</button>
+      <button data-tab="labs"><span>⚗</span>Analisi</button>
+      <button data-tab="diets"><span>◉</span>Diete</button>
+      <button data-tab="meds"><span>✚</span>Farmaci & integratori</button>
+      <button data-tab="compare"><span>▥</span>Confronta</button>
+      <button data-tab="data"><span>⇩</span>Dati & backup</button>
     </nav>
+    <div class="sidebar-note"><span>☀</span><p>Piccoli passi,<br><strong>grandi risultati.</strong></p></div>
+    <div class="version">Health Monitor V2.0</div>
+  </aside>
 
-    <section id="dashboard" class="view active">
-      <div class="cards">
-        <article class="card"><span>Pressione media 7 gg</span><strong id="bp7">—</strong><small id="bp7pulse">—</small></article>
-        <article class="card"><span>Ultimo peso</span><strong id="lastWeight">—</strong><small id="weightChange">—</small></article>
-        <article class="card"><span>Misurazioni 30 gg</span><strong id="count30">0</strong><small>pressione arteriosa</small></article>
-        <article class="card"><span>Periodo alimentare</span><strong id="currentDiet">—</strong><small id="dietSince">—</small></article>
-      </div>
-      <div class="panel"><div class="panelHead"><h2>Andamento recente</h2><select id="dashboardRange"><option value="30">30 giorni</option><option value="90">90 giorni</option><option value="180">6 mesi</option><option value="365">1 anno</option></select></div><canvas id="trendChart"></canvas></div>
-      <div class="panel"><h2>Attività recenti</h2><div id="recentList" class="list"></div></div>
-    </section>
+  <div class="content-wrap">
+    <header class="topbar">
+      <div class="page-heading"><h1 id="pageTitle">Dashboard</h1><p id="pageSubtitle">Panoramica dei tuoi dati di salute</p></div>
+      <div class="top-actions"><button id="themeBtn" class="iconBtn" aria-label="Tema">☾</button><button id="settingsBtn" class="iconBtn" aria-label="Impostazioni">⚙</button></div>
+    </header>
 
-    <section id="pressure" class="view">
-      <div class="sectionHead"><h1>Pressione</h1><button class="primary" data-modal="pressureModal">+ Misurazione</button></div>
-      <div class="panel"><canvas id="pressureChart"></canvas></div>
-      <div class="panel"><div id="pressureTable"></div></div>
-    </section>
+    <main>
+      <section id="setupBanner" class="banner hidden">Configura l'endpoint Apps Script e il token per iniziare. <button data-open-settings>Configura</button></section>
 
-    <section id="weight" class="view">
-      <div class="sectionHead"><h1>Peso corporeo</h1><button class="primary" data-modal="weightModal">+ Peso</button></div>
-      <div class="panel"><canvas id="weightChart"></canvas></div>
-      <div class="panel"><div id="weightTable"></div></div>
-    </section>
+      <section id="dashboard" class="view active">
+        <div class="metric-grid">
+          <article class="metric red"><div class="metric-icon">♥</div><div><span>Pressione media</span><strong id="bp7">—</strong><small id="bp7pulse">Ultimi 7 giorni</small></div></article>
+          <article class="metric blue"><div class="metric-icon">⚖</div><div><span>Peso attuale</span><strong id="lastWeight">—</strong><small id="weightChange">—</small></div></article>
+          <article class="metric green"><div class="metric-icon">⌁</div><div><span>Misurazioni 30 gg</span><strong id="count30">0</strong><small>pressione arteriosa</small></div></article>
+          <article class="metric amber"><div class="metric-icon">◉</div><div><span>Dieta attuale</span><strong id="currentDiet">—</strong><small id="dietSince">—</small></div></article>
+        </div>
 
-    <section id="labs" class="view">
-      <div class="sectionHead"><h1>Analisi</h1><button class="primary" data-modal="labModal">+ Valore</button></div>
-      <div class="filters"><input id="labSearch" placeholder="Cerca parametro…"><select id="labParameter"></select></div>
-      <div class="panel"><canvas id="labChart"></canvas></div>
-      <div class="panel"><div id="labTable"></div></div>
-    </section>
+        <div class="dashboard-grid">
+          <div class="panel chart-panel"><div class="panelHead"><div><h2>Andamento nel tempo</h2><p>Pressione arteriosa negli ultimi periodi</p></div><select id="dashboardRange"><option value="30">30 giorni</option><option value="90">3 mesi</option><option value="180">6 mesi</option><option value="365">1 anno</option></select></div><div class="chart-box"><canvas id="trendChart"></canvas></div></div>
+          <div class="panel recent-panel"><div class="panelHead"><div><h2>Eventi recenti</h2><p>Ultime registrazioni</p></div></div><div id="recentList" class="list"></div></div>
+        </div>
 
-    <section id="diets" class="view">
-      <div class="sectionHead"><h1>Periodi alimentari</h1><button class="primary" data-modal="dietModal">+ Periodo</button></div>
-      <div id="dietCards" class="timelineCards"></div>
-    </section>
+        <div class="quick-grid">
+          <button class="quick red" data-modal="pressureModal"><b>＋</b><span>Nuova pressione</span></button>
+          <button class="quick blue" data-modal="weightModal"><b>＋</b><span>Nuovo peso</span></button>
+          <button class="quick purple" data-modal="labModal"><b>＋</b><span>Nuova analisi</span></button>
+          <button class="quick green" data-modal="dietModal"><b>＋</b><span>Nuova dieta</span></button>
+          <button class="quick amber" data-modal="medModal"><b>＋</b><span>Farmaco / integratore</span></button>
+        </div>
 
-    <section id="meds" class="view">
-      <div class="sectionHead"><h1>Farmaci e integratori</h1><button class="primary" data-modal="medModal">+ Inserisci</button></div>
-      <div class="filters"><select id="medTypeFilter"><option value="">Tutti</option><option>Farmaco</option><option>Integratore</option></select><select id="medActiveFilter"><option value="">Tutti</option><option value="true">Attivi</option><option value="false">Terminati</option></select></div>
-      <div id="medCards" class="timelineCards"></div>
-    </section>
+        <div class="info-grid">
+          <article class="panel mini"><h2>Confronta i periodi</h2><p>Metti in relazione pressione, peso, dieta, analisi e terapie.</p><button class="link-btn" data-tab="compare">Apri confronto →</button></article>
+          <article class="panel mini"><h2>Il tuo database</h2><p>I dati restano nel tuo Google Sheet; GitHub ospita solo l'interfaccia.</p><button class="link-btn" data-tab="data">Backup ed export →</button></article>
+          <article class="panel mini safety"><h2>Uso consapevole</h2><p>I grafici mostrano trend personali e associazioni temporali, non diagnosi né causalità.</p></article>
+        </div>
+      </section>
 
-    <section id="compare" class="view">
-      <div class="sectionHead"><h1>Confronta</h1></div>
-      <div class="panel compareControls">
-        <label>Periodo da <input type="date" id="cmpFrom"></label><label>a <input type="date" id="cmpTo"></label>
-        <label><input type="checkbox" id="cmpBP" checked> Pressione</label><label><input type="checkbox" id="cmpWeight" checked> Peso</label>
-        <label>Analisi <select id="cmpLab"><option value="">Nessuna</option></select></label>
-        <button id="runCompare" class="primary">Aggiorna confronto</button>
-      </div>
-      <div class="cards"><article class="card"><span>Sistolica media</span><strong id="cmpSys">—</strong></article><article class="card"><span>Diastolica media</span><strong id="cmpDia">—</strong></article><article class="card"><span>Variazione peso</span><strong id="cmpW">—</strong></article><article class="card"><span>Misurazioni</span><strong id="cmpN">—</strong></article></div>
-      <div class="panel"><canvas id="compareChart"></canvas></div>
-      <div class="panel"><h2>Periodi sovrapposti</h2><div id="overlapTimeline"></div></div>
-      <div class="notice">I confronti mostrano associazioni temporali nei tuoi dati. Non dimostrano che dieta, farmaci o integratori abbiano causato un cambiamento.</div>
-    </section>
+      <section id="pressure" class="view"><div class="sectionHead"><div><h1>Pressione</h1><p>Storico di sistolica, diastolica e frequenza cardiaca</p></div><button class="primary" data-modal="pressureModal">＋ Misurazione</button></div><div class="panel"><div class="chart-box"><canvas id="pressureChart"></canvas></div></div><div class="panel table-panel"><div id="pressureTable"></div></div></section>
+      <section id="weight" class="view"><div class="sectionHead"><div><h1>Peso corporeo</h1><p>Monitora peso e circonferenza vita</p></div><button class="primary" data-modal="weightModal">＋ Peso</button></div><div class="panel"><div class="chart-box"><canvas id="weightChart"></canvas></div></div><div class="panel table-panel"><div id="weightTable"></div></div></section>
+      <section id="labs" class="view"><div class="sectionHead"><div><h1>Analisi</h1><p>Inserisci qualsiasi parametro di laboratorio</p></div><button class="primary" data-modal="labModal">＋ Valore</button></div><div class="filters"><input id="labSearch" placeholder="Cerca parametro…"><select id="labParameter"></select></div><div class="panel"><div class="chart-box"><canvas id="labChart"></canvas></div></div><div class="panel table-panel"><div id="labTable"></div></div></section>
+      <section id="diets" class="view"><div class="sectionHead"><div><h1>Periodi alimentari</h1><p>Confronta alimentazione, peso e pressione nel tempo</p></div><button class="primary" data-modal="dietModal">＋ Periodo</button></div><div id="dietCards" class="timelineCards"></div></section>
+      <section id="meds" class="view"><div class="sectionHead"><div><h1>Farmaci e integratori</h1><p>Registra dose, frequenza e periodo di utilizzo</p></div><button class="primary" data-modal="medModal">＋ Inserisci</button></div><div class="filters"><select id="medTypeFilter"><option value="">Tutti</option><option>Farmaco</option><option>Integratore</option></select><select id="medActiveFilter"><option value="">Tutti</option><option value="true">Attivi</option><option value="false">Terminati</option></select></div><div id="medCards" class="timelineCards"></div></section>
+      <section id="compare" class="view"><div class="sectionHead"><div><h1>Confronta</h1><p>Analizza cosa cambia nei diversi periodi</p></div></div><div class="panel compareControls"><label>Da<input type="date" id="cmpFrom"></label><label>A<input type="date" id="cmpTo"></label><label class="check"><input type="checkbox" id="cmpBP" checked> Pressione</label><label class="check"><input type="checkbox" id="cmpWeight" checked> Peso</label><label>Analisi<select id="cmpLab"><option value="">Nessuna</option></select></label><button id="runCompare" class="primary">Aggiorna confronto</button></div><div class="metric-grid compact"><article class="metric"><div><span>Sistolica media</span><strong id="cmpSys">—</strong></div></article><article class="metric"><div><span>Diastolica media</span><strong id="cmpDia">—</strong></div></article><article class="metric"><div><span>Variazione peso</span><strong id="cmpW">—</strong></div></article><article class="metric"><div><span>Misurazioni</span><strong id="cmpN">—</strong></div></article></div><div class="panel"><div class="chart-box tall"><canvas id="compareChart"></canvas></div></div><div class="panel"><h2>Periodi sovrapposti</h2><div id="overlapTimeline"></div></div><div class="notice">I confronti mostrano associazioni temporali nei tuoi dati. Non dimostrano che dieta, farmaci o integratori abbiano causato un cambiamento.</div></section>
+      <section id="data" class="view"><div class="sectionHead"><div><h1>Dati & backup</h1><p>Sincronizzazione ed esportazione dei tuoi dati</p></div></div><div class="panel actions"><button id="refreshBtn">↻ Sincronizza</button><button id="exportJsonBtn">Esporta JSON</button><button id="exportCsvBtn">Esporta CSV</button></div><div class="panel"><h2>Privacy e archiviazione</h2><p>Tutti i dati sanitari restano nel tuo Google Sheet. GitHub contiene solo il codice dell'interfaccia.</p><p class="muted">Il token è salvato localmente nel browser e non deve essere inserito nel repository.</p></div></section>
+    </main>
+  </div>
+</div>
 
-    <section id="data" class="view">
-      <div class="sectionHead"><h1>Gestione dati</h1></div>
-      <div class="panel actions"><button id="refreshBtn">↻ Sincronizza</button><button id="exportJsonBtn">Esporta JSON</button><button id="exportCsvBtn">Esporta CSV</button></div>
-      <div class="panel"><h2>Database</h2><p>Tutti i dati sanitari restano nel tuo Google Sheet. GitHub contiene solo il codice dell'interfaccia.</p><p class="muted">Per proteggere l'accesso, il token viene salvato solamente nel browser tramite localStorage e non va inserito nel repository.</p></div>
-    </section>
-  </main>
+<nav class="mobile-nav">
+  <button class="active" data-tab="dashboard"><span>⌂</span><small>Home</small></button><button data-tab="pressure"><span>♥</span><small>Pressione</small></button><button class="mobile-add" data-modal="pressureModal"><span>＋</span></button><button data-tab="compare"><span>▥</span><small>Confronta</small></button><button data-tab="data"><span>•••</span><small>Altro</small></button>
+</nav>
+<button class="fab" data-modal="pressureModal" aria-label="Nuova misurazione">＋</button>
 
-  <button class="fab" data-modal="pressureModal" aria-label="Nuova misurazione">＋</button>
+  <dialog id="settingsModal"><form method="dialog" class="modalForm"><div class="modalTitle"><span class="modalIcon">⚙</span><div><h2>Configurazione</h2><p>Collega la web app al tuo Apps Script.</p></div></div><label>URL Web App Apps Script<input id="apiUrl" placeholder="https://script.google.com/macros/s/.../exec"></label><label>Token di accesso<input id="apiToken" type="password" autocomplete="off"></label><div class="modalActions"><button value="cancel">Annulla</button><button value="default" id="saveSettings" class="primary">Salva collegamento</button></div></form></dialog>
 
-  <dialog id="settingsModal"><form method="dialog" class="modalForm"><h2>Configurazione</h2><label>URL Web App Apps Script<input id="apiUrl" placeholder="https://script.google.com/macros/s/.../exec"></label><label>Token di accesso<input id="apiToken" type="password" autocomplete="off"></label><div class="modalActions"><button value="cancel">Annulla</button><button value="default" id="saveSettings" class="primary">Salva</button></div></form></dialog>
+  <dialog id="pressureModal"><form class="modalForm dataForm" data-entity="PRESSURE"><div class="modalTitle"><span class="modalIcon pressure">♥</span><div><h2>Pressione</h2><p>Registra una nuova misurazione.</p></div></div><input type="hidden" name="id"><label>Data e ora<input type="datetime-local" name="datetime" required></label><div class="grid2"><label>Sistolica <small>mmHg</small><input type="number" name="systolic" min="50" max="300" required></label><label>Diastolica <small>mmHg</small><input type="number" name="diastolic" min="30" max="200" required></label></div><label>Battiti/min<input type="number" name="pulse" min="25" max="250"></label><div class="grid2"><label>Posizione<select name="position"><option value="">—</option><option>Seduto</option><option>In piedi</option><option>Sdraiato</option></select></label><label>Braccio<select name="arm"><option value="">—</option><option>Sinistro</option><option>Destro</option></select></label></div><label>Contesto<select name="context"><option value="">—</option><option>Riposo</option><option>Prima dei farmaci</option><option>Dopo i farmaci</option><option>Dopo pasto</option><option>Dopo attività fisica</option><option>Sintomi</option></select></label><label>Note<textarea name="notes" placeholder="Come ti sentivi, circostanze particolari…"></textarea></label><div class="modalActions"><button type="button" data-close>Annulla</button><button class="primary">Salva misurazione</button></div></form></dialog>
 
-  <dialog id="pressureModal"><form class="modalForm dataForm" data-entity="PRESSURE"><h2>Nuova pressione</h2><input type="hidden" name="id"><label>Data e ora<input type="datetime-local" name="datetime" required></label><div class="grid2"><label>Sistolica<input type="number" name="systolic" min="50" max="300" required></label><label>Diastolica<input type="number" name="diastolic" min="30" max="200" required></label></div><label>Battiti/min<input type="number" name="pulse" min="25" max="250"></label><div class="grid2"><label>Posizione<select name="position"><option value="">—</option><option>Seduto</option><option>In piedi</option><option>Sdraiato</option></select></label><label>Braccio<select name="arm"><option value="">—</option><option>Sinistro</option><option>Destro</option></select></label></div><label>Contesto<select name="context"><option value="">—</option><option>Riposo</option><option>Prima dei farmaci</option><option>Dopo i farmaci</option><option>Dopo pasto</option><option>Dopo attività fisica</option><option>Sintomi</option></select></label><label>Note<textarea name="notes"></textarea></label><div class="modalActions"><button type="button" data-close>Annulla</button><button class="primary">Salva</button></div></form></dialog>
+  <dialog id="weightModal"><form class="modalForm dataForm" data-entity="WEIGHT"><div class="modalTitle"><span class="modalIcon weight">◈</span><div><h2>Peso corporeo</h2><p>Aggiungi una nuova rilevazione.</p></div></div><input type="hidden" name="id"><label>Data<input type="date" name="date" required></label><label>Peso (kg)<input type="number" name="weightKg" step="0.1" min="20" max="400" required></label><label>Circonferenza vita (cm)<input type="number" name="waistCm" step="0.1"></label><label>Note<textarea name="notes"></textarea></label><div class="modalActions"><button type="button" data-close>Annulla</button><button class="primary">Salva peso</button></div></form></dialog>
 
-  <dialog id="weightModal"><form class="modalForm dataForm" data-entity="WEIGHT"><h2>Registra peso</h2><input type="hidden" name="id"><label>Data<input type="date" name="date" required></label><label>Peso (kg)<input type="number" name="weightKg" step="0.1" min="20" max="400" required></label><label>Circonferenza vita (cm)<input type="number" name="waistCm" step="0.1"></label><label>Note<textarea name="notes"></textarea></label><div class="modalActions"><button type="button" data-close>Annulla</button><button class="primary">Salva</button></div></form></dialog>
+  <dialog id="labModal"><form class="modalForm dataForm" data-entity="LABS"><div class="modalTitle"><span class="modalIcon labs">⚗</span><div><h2>Valore analisi</h2><p>Inserisci un parametro di laboratorio.</p></div></div><input type="hidden" name="id"><label>Data prelievo<input type="date" name="date" required></label><label>Parametro<input name="parameter" list="labNames" required><datalist id="labNames"><option>Glicemia</option><option>HbA1c</option><option>Colesterolo totale</option><option>HDL</option><option>LDL</option><option>Trigliceridi</option><option>Creatinina</option><option>eGFR</option><option>Omocisteina</option><option>Vitamina D</option><option>Vitamina B12</option><option>Folati</option><option>Sodio</option><option>Potassio</option><option>Magnesio</option><option>AST</option><option>ALT</option></datalist></label><div class="grid2"><label>Valore<input type="number" name="value" step="any" required></label><label>Unità<input name="unit" placeholder="mg/dL, µmol/L…"></label></div><div class="grid2"><label>Rif. minimo<input type="number" name="refMin" step="any"></label><label>Rif. massimo<input type="number" name="refMax" step="any"></label></div><label>Laboratorio<input name="lab"></label><label>Note<textarea name="notes"></textarea></label><div class="modalActions"><button type="button" data-close>Annulla</button><button class="primary">Salva valore</button></div></form></dialog>
 
-  <dialog id="labModal"><form class="modalForm dataForm" data-entity="LABS"><h2>Valore analisi</h2><input type="hidden" name="id"><label>Data prelievo<input type="date" name="date" required></label><label>Parametro<input name="parameter" list="labNames" required><datalist id="labNames"><option>Glicemia</option><option>HbA1c</option><option>Colesterolo totale</option><option>HDL</option><option>LDL</option><option>Trigliceridi</option><option>Creatinina</option><option>eGFR</option><option>Omocisteina</option><option>Vitamina D</option><option>Vitamina B12</option><option>Folati</option><option>Sodio</option><option>Potassio</option><option>Magnesio</option><option>AST</option><option>ALT</option></datalist></label><div class="grid2"><label>Valore<input type="number" name="value" step="any" required></label><label>Unità<input name="unit" placeholder="mg/dL, µmol/L…"></label></div><div class="grid2"><label>Rif. minimo<input type="number" name="refMin" step="any"></label><label>Rif. massimo<input type="number" name="refMax" step="any"></label></div><label>Laboratorio<input name="lab"></label><label>Note<textarea name="notes"></textarea></label><div class="modalActions"><button type="button" data-close>Annulla</button><button class="primary">Salva</button></div></form></dialog>
+  <dialog id="dietModal"><form class="modalForm dataForm" data-entity="DIETS"><div class="modalTitle"><span class="modalIcon diet">◒</span><div><h2>Periodo alimentare</h2><p>Definisci una nuova fase della dieta.</p></div></div><input type="hidden" name="id"><label>Nome<input name="name" placeholder="Chetogenica, low-carb…" required></label><div class="grid2"><label>Inizio<input type="date" name="startDate" required></label><label>Fine<input type="date" name="endDate"></label></div><div class="grid2"><label>kcal/giorno<input type="number" name="kcal"></label><label>Carboidrati g/giorno<input type="number" name="carbsG"></label></div><div class="grid2"><label>Peso iniziale<input type="number" step="0.1" name="weightStart"></label><label>Peso finale<input type="number" step="0.1" name="weightEnd"></label></div><label>Note<textarea name="notes"></textarea></label><div class="modalActions"><button type="button" data-close>Annulla</button><button class="primary">Salva periodo</button></div></form></dialog>
 
-  <dialog id="dietModal"><form class="modalForm dataForm" data-entity="DIETS"><h2>Periodo alimentare</h2><input type="hidden" name="id"><label>Nome<input name="name" placeholder="Chetogenica, low-carb…" required></label><div class="grid2"><label>Inizio<input type="date" name="startDate" required></label><label>Fine<input type="date" name="endDate"></label></div><div class="grid2"><label>kcal/giorno<input type="number" name="kcal"></label><label>Carboidrati g/giorno<input type="number" name="carbsG"></label></div><div class="grid2"><label>Peso iniziale<input type="number" step="0.1" name="weightStart"></label><label>Peso finale<input type="number" step="0.1" name="weightEnd"></label></div><label>Note<textarea name="notes"></textarea></label><div class="modalActions"><button type="button" data-close>Annulla</button><button class="primary">Salva</button></div></form></dialog>
+  <dialog id="medModal"><form class="modalForm dataForm" data-entity="MEDS"><div class="modalTitle"><span class="modalIcon meds">✚</span><div><h2>Farmaco / integratore</h2><p>Registra una terapia o un'integrazione.</p></div></div><input type="hidden" name="id"><label>Tipo<select name="type" required><option>Farmaco</option><option>Integratore</option></select></label><label>Nome<input name="name" required></label><div class="grid2"><label>Dose<input name="dose"></label><label>Unità<input name="unit" placeholder="mg, UI, compresse…"></label></div><label>Frequenza<input name="frequency" placeholder="1 volta/die, al bisogno…"></label><label>Orario<input name="timeOfDay" placeholder="Mattina, sera, 08:00…"></label><div class="grid2"><label>Inizio<input type="date" name="startDate" required></label><label>Fine<input type="date" name="endDate"></label></div><label class="check"><input type="checkbox" name="active" checked> Attivo</label><label>Note<textarea name="notes"></textarea></label><div class="modalActions"><button type="button" data-close>Annulla</button><button class="primary">Salva</button></div></form></dialog>
 
-  <dialog id="medModal"><form class="modalForm dataForm" data-entity="MEDS"><h2>Farmaco / integratore</h2><input type="hidden" name="id"><label>Tipo<select name="type" required><option>Farmaco</option><option>Integratore</option></select></label><label>Nome<input name="name" required></label><div class="grid2"><label>Dose<input name="dose"></label><label>Unità<input name="unit" placeholder="mg, UI, compresse…"></label></div><label>Frequenza<input name="frequency" placeholder="1 volta/die, al bisogno…"></label><label>Orario<input name="timeOfDay" placeholder="Mattina, sera, 08:00…"></label><div class="grid2"><label>Inizio<input type="date" name="startDate" required></label><label>Fine<input type="date" name="endDate"></label></div><label class="check"><input type="checkbox" name="active" checked> Attivo</label><label>Note<textarea name="notes"></textarea></label><div class="modalActions"><button type="button" data-close>Annulla</button><button class="primary">Salva</button></div></form></dialog>
 
-  <div id="toast"></div>
+  <div id="toast" class="toast"></div>
   <script src="app.js"></script>
 </body>
 </html>
