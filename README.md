@@ -82,3 +82,12 @@ Corretto l'invio POST verso Google Apps Script usando `application/x-www-form-ur
 - Pulsanti Annulla/Salva sempre visibili e fissi in basso nei popup su smartphone.
 - Sincronizzazione automatica dopo salvataggi Apps Script lenti su Android/PWA.
 - Cache PWA aggiornata.
+
+
+## V2.5 — restyling smartphone
+- Barra inferiore flottante e più moderna, con 5 sezioni essenziali.
+- Stato attivo più evidente e pulsante Altro coerente con il mockup approvato.
+- Pulsanti dei popup ridisegnati: Annulla neutro e Salva blu ad alto contrasto.
+- Testo Salva sempre bianco e leggibile, anche durante il salvataggio.
+- Campi e popup più curati su smartphone.
+- Mantiene il fix V2.4 di chiusura/sincronizzazione dei popup.
