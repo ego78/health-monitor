@@ -29,7 +29,7 @@
       <button data-tab="data"><span>⇩</span>Dati & backup</button>
     </nav>
     <div class="sidebar-note"><span>☀</span><p>Piccoli passi,<br><strong>grandi risultati.</strong></p></div>
-    <div class="version">Health Monitor V2.0</div>
+    <div class="version">Health Monitor V2.2</div>
   </aside>
 
   <div class="content-wrap">
@@ -81,16 +81,24 @@
 </div>
 
 <nav class="mobile-nav" aria-label="Menu principale smartphone">
-  <button class="active" data-tab="dashboard"><span>⌂</span><small>Dashboard</small></button>
+  <button class="active" data-tab="dashboard"><span>⌂</span><small>Home</small></button>
   <button data-tab="pressure"><span>♥</span><small>Pressione</small></button>
   <button data-tab="weight"><span>⚖</span><small>Peso</small></button>
   <button data-tab="labs"><span>⚗</span><small>Analisi</small></button>
-  <button data-tab="diets"><span>◉</span><small>Diete</small></button>
-  <button data-tab="meds"><span>✚</span><small>Farmaci</small></button>
-  <button data-tab="compare"><span>▥</span><small>Confronta</small></button>
-  <button data-tab="data"><span>⇩</span><small>Dati</small></button>
-  <button type="button" id="mobileSettingsBtn"><span>⚙</span><small>Impostazioni</small></button>
+  <button type="button" id="mobileMoreBtn"><span>☰</span><small>Altro</small></button>
 </nav>
+<div class="mobile-more-backdrop" id="mobileMoreBackdrop" aria-hidden="true"></div>
+<section class="mobile-more-sheet" id="mobileMoreSheet" aria-hidden="true" aria-label="Altre sezioni">
+  <div class="sheet-handle"></div>
+  <div class="sheet-head"><div><strong>Altre sezioni</strong><small>Tutte le funzioni di Health Monitor</small></div><button type="button" id="mobileMoreClose" aria-label="Chiudi">×</button></div>
+  <div class="sheet-grid">
+    <button data-tab="diets"><span>◉</span><b>Diete</b><small>Periodi alimentari</small></button>
+    <button data-tab="meds"><span>✚</span><b>Farmaci</b><small>e integratori</small></button>
+    <button data-tab="compare"><span>▥</span><b>Confronta</b><small>Trend e periodi</small></button>
+    <button data-tab="data"><span>⇩</span><b>Dati</b><small>Backup ed export</small></button>
+    <button type="button" id="mobileSettingsBtn"><span>⚙</span><b>Impostazioni</b><small>API e sicurezza</small></button>
+  </div>
+</section>
 <button class="fab" data-modal="pressureModal" aria-label="Nuova misurazione">＋</button>
 
   <dialog id="settingsModal"><form method="dialog" class="modalForm"><div class="modalTitle"><span class="modalIcon">⚙</span><div><h2>Configurazione</h2><p>Collega la web app al tuo Apps Script.</p></div></div><label>URL Web App Apps Script<input id="apiUrl" placeholder="https://script.google.com/macros/s/.../exec"></label><label>Token di accesso<input id="apiToken" type="password" autocomplete="off"></label><div class="modalActions"><button value="cancel">Annulla</button><button value="default" id="saveSettings" class="primary">Salva collegamento</button></div></form></dialog>

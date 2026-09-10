@@ -71,3 +71,7 @@ Questa versione include una nuova dashboard responsive, menu laterale desktop, b
 
 ### Aggiornamento da V1
 Su GitHub sostituisci `index.html`, `style.css`, `app.js`, `manifest.json` e `sw.js`, quindi aggiungi la cartella `icons/`. `Code.gs` può restare invariato. Dopo il commit, ricarica la pagina forzando l'aggiornamento (Ctrl+F5) oppure chiudi e riapri la PWA installata.
+
+
+## V2.3 fix salvataggio
+Corretto l'invio POST verso Google Apps Script usando `application/x-www-form-urlencoded` con campo `payload`, compatibile con `parseBody_()` del backend esistente. Non serve modificare o ridistribuire Code.gs.
