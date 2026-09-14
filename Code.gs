@@ -3,7 +3,7 @@ const SHEETS = {
   PRESSURE: ['id','datetime','systolic','diastolic','pulse','position','arm','context','notes','createdAt'],
   WEIGHT: ['id','date','weightKg','waistCm','notes','createdAt'],
   LABS: ['id','date','parameter','value','unit','refMin','refMax','lab','notes','createdAt'],
-  DIETS: ['id','name','startDate','endDate','kcal','carbsG','weightStart','weightEnd','notes','createdAt'],
+  DIETS: ['id','name','startDate','endDate','kcal','carbsG','proteinG','fatG','weightStart','weightEnd','notes','createdAt'],
   MEDS: ['id','type','name','dose','unit','frequency','timeOfDay','startDate','endDate','active','notes','createdAt'],
   EVENTS: ['id','date','category','title','details','createdAt'],
   SETTINGS: ['key','value']
@@ -22,7 +22,12 @@ function setupDatabase() {
   Object.entries(SHEETS).forEach(([name, headers]) => {
     let sh = ss.getSheetByName(name);
     if (!sh) sh = ss.insertSheet(name);
-    if (sh.getLastRow() === 0) sh.appendRow(headers);
+    if (sh.getLastRow() === 0) {
+      sh.appendRow(headers);
+    } else {
+      const existing = sh.getRange(1,1,1,sh.getLastColumn()).getValues()[0];
+      headers.forEach(h => { if (!existing.includes(h)) { sh.getRange(1, sh.getLastColumn()+1).setValue(h); existing.push(h); } });
+    }
     sh.setFrozenRows(1);
     sh.getRange(1,1,1,headers.length).setFontWeight('bold');
     sh.autoResizeColumns(1, headers.length);

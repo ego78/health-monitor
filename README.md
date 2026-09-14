@@ -91,3 +91,10 @@ Corretto l'invio POST verso Google Apps Script usando `application/x-www-form-ur
 - Testo Salva sempre bianco e leggibile, anche durante il salvataggio.
 - Campi e popup più curati su smartphone.
 - Mantiene il fix V2.4 di chiusura/sincronizzazione dei popup.
+
+
+## V2.6 — macronutrienti
+- Aggiunti Proteine e Grassi ai periodi alimentari, oltre a kcal e carboidrati.
+- Calcolo live delle kcal teoriche dai macro (4/4/9) e percentuali.
+- Le schede dieta mostrano tutti i macro.
+- Code.gs include una migrazione non distruttiva: eseguendo setupDatabase() aggiunge le nuove colonne proteinG e fatG al foglio DIETS esistente senza cancellare i dati.
