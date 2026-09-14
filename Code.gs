@@ -1,6 +1,6 @@
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '2.7.0';
 const SHEETS = {
-  PRESSURE: ['id','datetime','systolic','diastolic','pulse','position','arm','context','notes','createdAt'],
+  PRESSURE: ['id','datetime','systolic','diastolic','pulse','period','readingsCount','systolic1','diastolic1','pulse1','systolic2','diastolic2','pulse2','systolic3','diastolic3','pulse3','position','arm','context','notes','createdAt'],
   WEIGHT: ['id','date','weightKg','waistCm','notes','createdAt'],
   LABS: ['id','date','parameter','value','unit','refMin','refMax','lab','notes','createdAt'],
   DIETS: ['id','name','startDate','endDate','kcal','carbsG','proteinG','fatG','weightStart','weightEnd','notes','createdAt'],
@@ -106,8 +106,8 @@ function list_(entity, from, to) {
 
 function create_(entity, data) {
   assertEntity_(entity);
-  const headers = SHEETS[entity];
   const sh = getSheet_(entity);
+  const headers = actualHeaders_(sh);
   data.id = data.id || Utilities.getUuid();
   data.createdAt = data.createdAt || new Date().toISOString();
   if (entity === 'MEDS' && data.active === undefined) data.active = true;
@@ -120,7 +120,7 @@ function update_(entity, id, data) {
   assertEntity_(entity);
   if (!id) throw new Error('ID mancante');
   const sh = getSheet_(entity);
-  const headers = SHEETS[entity];
+  const headers = actualHeaders_(sh);
   const values = sh.getDataRange().getValues();
   const idx = headers.indexOf('id');
   for (let i=1;i<values.length;i++) {
@@ -138,7 +138,7 @@ function update_(entity, id, data) {
 function remove_(entity, id) {
   assertEntity_(entity);
   const sh = getSheet_(entity);
-  const headers = SHEETS[entity];
+  const headers = actualHeaders_(sh);
   const values = sh.getDataRange().getValues();
   const idx = headers.indexOf('id');
   for (let i=1;i<values.length;i++) {
@@ -162,12 +162,18 @@ function bulk_(ops) {
 
 function readAll_(entity) {
   const sh = getSheet_(entity);
-  const headers = SHEETS[entity];
+  const headers = actualHeaders_(sh);
   const lastRow = sh.getLastRow();
   if (lastRow < 2) return [];
   return sh.getRange(2,1,lastRow-1,headers.length).getValues()
     .map(r => objectFromRow_(headers,r))
     .filter(r => r.id || entity === 'SETTINGS');
+}
+
+function actualHeaders_(sh) {
+  const lastCol = sh.getLastColumn();
+  if (!lastCol) return [];
+  return sh.getRange(1,1,1,lastCol).getValues()[0].map(String).filter(Boolean);
 }
 
 function objectFromRow_(headers,row) {

@@ -98,3 +98,15 @@ Corretto l'invio POST verso Google Apps Script usando `application/x-www-form-ur
 - Calcolo live delle kcal teoriche dai macro (4/4/9) e percentuali.
 - Le schede dieta mostrano tutti i macro.
 - Code.gs include una migrazione non distruttiva: eseguendo setupDatabase() aggiunge le nuove colonne proteinG e fatG al foglio DIETS esistente senza cancellare i dati.
+
+
+## V2.7 — monitoraggio avanzato
+- Pressione: sessioni da 1, 2 o 3 misurazioni con media automatica e fascia mattina/sera.
+- Confronto Prima/Dopo: 7, 14, 30 o 60 giorni rispetto all'inizio di dieta, farmaco o integratore, includendo pressione, battiti, peso e analisi disponibili.
+- Timeline salute unificata per pressione, peso, analisi, diete e terapie.
+- Report salute per 30 giorni, 3 mesi, 6 mesi, 1 anno o intervallo personalizzato, stampabile/salvabile in PDF dal browser.
+- Grafico dei macronutrienti dei piani alimentari.
+- Dashboard con macro del piano alimentare attivo.
+
+### Aggiornamento database
+Questa versione aggiunge colonne opzionali al foglio PRESSURE. Dopo aver copiato il nuovo Code.gs, eseguire `setupDatabase()` una volta e poi creare una nuova distribuzione della Web App Apps Script. I dati esistenti non vengono eliminati.
