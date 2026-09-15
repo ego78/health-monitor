@@ -46,7 +46,7 @@
       <button data-tab="data"><span>⇩</span>Dati & backup</button>
     </nav>
     <div class="sidebar-note"><span>☀</span><p>Piccoli passi,<br><strong>grandi risultati.</strong></p></div>
-    <div class="version">Health Monitor V3.1.1</div>
+    <div class="version">Health Monitor V3.2</div>
   </aside>
 
   <div class="content-wrap">
@@ -58,33 +58,67 @@
     <main>
       <section id="setupBanner" class="banner hidden">Configura l'endpoint Apps Script e il token per iniziare. <button data-open-settings>Configura</button></section>
 
-      <section id="dashboard" class="view active"><div class="mobileWelcome"><div><small>HEALTH MONITOR</small><strong>La tua salute, in un colpo d’occhio</strong></div><img src="icons/icon-96.png" alt=""></div>
-        <div class="metric-grid">
-          <article class="metric red"><div class="metric-icon">♥</div><div><span>Pressione media</span><strong id="bp7">—</strong><small id="bp7pulse">Ultimi 7 giorni</small></div></article>
-          <article class="metric blue"><div class="metric-icon">⚖</div><div><span>Peso attuale</span><strong id="lastWeight">—</strong><small id="weightChange">—</small></div></article>
-          <article class="metric green"><div class="metric-icon">⌁</div><div><span>Misurazioni 30 gg</span><strong id="count30">0</strong><small>pressione arteriosa</small></div></article>
-          <article class="metric amber"><div class="metric-icon">◉</div><div><span>Dieta attuale</span><strong id="currentDiet">—</strong><small id="dietSince">—</small><small id="dietMacros" class="macroMini">—</small></div></article>
+      <section id="dashboard" class="view active">
+        <div class="hmHero">
+          <div>
+            <span class="heroEyebrow">HEALTH MONITOR</span>
+            <h1>Oggi</h1>
+            <p id="heroDate">La tua salute, in un colpo d’occhio</p>
+          </div>
+          <button class="heroProfile" data-tab="todayView" aria-label="Apri Oggi">♡</button>
         </div>
 
-        <div class="dashboard-grid">
-          <div class="panel chart-panel"><div class="panelHead"><div><h2>Andamento nel tempo</h2><p>Pressione arteriosa negli ultimi periodi</p></div><select id="dashboardRange"><option value="30">30 giorni</option><option value="90">3 mesi</option><option value="180">6 mesi</option><option value="365">1 anno</option></select></div><div class="chart-box"><canvas id="trendChart"></canvas></div></div>
-          <div class="panel recent-panel"><div class="panelHead"><div><h2>Eventi recenti</h2><p>Ultime registrazioni</p></div></div><div id="recentList" class="list"></div></div>
+        <div class="hmStatusGrid">
+          <article class="hmStatusCard bpCard" data-tab="pressure">
+            <div class="statusTop"><span class="statusIcon">♥</span><span class="statusLabel">Pressione</span><span class="statusArrow">›</span></div>
+            <strong id="bp7">—</strong>
+            <small id="bp7pulse">Ultimi 7 giorni</small>
+          </article>
+          <article class="hmStatusCard weightCard" data-tab="weight">
+            <div class="statusTop"><span class="statusIcon">⚖</span><span class="statusLabel">Peso</span><span class="statusArrow">›</span></div>
+            <strong id="lastWeight">—</strong>
+            <small id="weightChange">—</small>
+          </article>
+          <article class="hmStatusCard countCard" data-tab="pressure">
+            <div class="statusTop"><span class="statusIcon">⌁</span><span class="statusLabel">Controlli</span><span class="statusArrow">›</span></div>
+            <strong id="count30">0</strong>
+            <small>misurazioni negli ultimi 30 gg</small>
+          </article>
+          <article class="hmStatusCard foodCard" data-tab="todayView">
+            <div class="statusTop"><span class="statusIcon">◉</span><span class="statusLabel">Piano attivo</span><span class="statusArrow">›</span></div>
+            <strong id="currentDiet">—</strong>
+            <small id="dietSince">—</small><small id="dietMacros" class="macroMini">—</small>
+          </article>
         </div>
 
-        <div class="quick-grid">
-          <button class="quick red" data-modal="pressureModal"><b>＋</b><span>Nuova pressione</span></button>
-          <button class="quick blue" data-modal="weightModal"><b>＋</b><span>Nuovo peso</span></button>
-          <button class="quick purple" data-modal="labModal"><b>＋</b><span>Nuova analisi</span></button>
-          <button class="quick green" data-modal="dietModal"><b>＋</b><span>Nuova dieta</span></button>
-          <button class="quick amber" data-modal="medModal"><b>＋</b><span>Farmaco / integratore</span></button>
+        <div class="hmActionStrip">
+          <button data-modal="pressureModal"><span class="actionBubble red">♥</span><b>Pressione</b></button>
+          <button data-modal="weightModal"><span class="actionBubble blue">⚖</span><b>Peso</b></button>
+          <button data-modal="mealModal"><span class="actionBubble purple">🍽</span><b>Pasto</b></button>
+          <button data-modal="labModal"><span class="actionBubble green">⚗</span><b>Analisi</b></button>
         </div>
 
-        <div class="info-grid">
-          <article class="panel mini"><h2>Confronta i periodi</h2><p>Metti in relazione pressione, peso, dieta, analisi e terapie.</p><button class="link-btn" data-tab="compare">Apri confronto →</button></article>
-          <article class="panel mini"><h2>Timeline salute</h2><p>Vedi in un’unica cronologia pressione, peso, analisi, dieta e terapie.</p><button class="link-btn" data-tab="timeline">Apri timeline →</button></article>
-          <article class="panel mini"><h2>Report salute</h2><p>Crea un riepilogo per 30 giorni, 3 mesi, 6 mesi o un periodo personalizzato.</p><button class="link-btn" data-tab="report">Crea report →</button></article>
-          <article class="panel mini"><h2>Il tuo database</h2><p>I dati restano nel tuo Google Sheet; GitHub ospita solo l'interfaccia.</p><button class="link-btn" data-tab="data">Backup ed export →</button></article>
-          <article class="panel mini safety"><h2>Uso consapevole</h2><p>I grafici mostrano trend personali e associazioni temporali, non diagnosi né causalità.</p></article>
+        <div class="hmDietBanner" data-tab="diets">
+          <span class="dietLeaf">◉</span>
+          <div><small>PIANO ALIMENTARE ATTIVO</small><strong id="dietBannerName">—</strong><span id="dietBannerInfo">Tocca per vedere il piano</span></div>
+          <b>›</b>
+        </div>
+
+        <div class="hmTrend panel">
+          <div class="hmPanelTitle">
+            <div><h2>Andamento</h2><p>Pressione arteriosa</p></div>
+            <select id="dashboardRange"><option value="30">30 giorni</option><option value="90">3 mesi</option><option value="180">6 mesi</option><option value="365">1 anno</option></select>
+          </div>
+          <div class="trendLegend"><span><i class="dot sys"></i>Sistolica</span><span><i class="dot dia"></i>Diastolica</span></div>
+          <div class="chart-box hmChart"><canvas id="trendChart"></canvas></div>
+        </div>
+
+        <div class="hmSectionTitle"><div><h2>Attività recente</h2><p>Le ultime registrazioni</p></div><button data-tab="timeline">Vedi tutte</button></div>
+        <div class="panel recent-panel hmRecent"><div id="recentList" class="list"></div></div>
+
+        <div class="hmTools">
+          <button data-tab="compare"><span>⇄</span><div><b>Confronta</b><small>Prima e dopo</small></div><i>›</i></button>
+          <button data-tab="report"><span>▤</span><div><b>Report</b><small>Riepilogo salute</small></div><i>›</i></button>
         </div>
       </section>
 
@@ -128,13 +162,28 @@
   </div>
 </div>
 
-<nav class="mobile-nav" aria-label="Menu principale smartphone">
+<nav class="mobile-nav hmBottomNav" aria-label="Menu principale smartphone">
   <button class="active" data-tab="dashboard"><span class="navIcon">⌂</span><small>Home</small></button>
-  <button data-tab="todayView"><span class="navIcon">✓</span><small>Oggi</small></button>
-  <button data-tab="pressure"><span class="navIcon">♥</span><small>Pressione</small></button>
-  <button data-tab="weight"><span class="navIcon">▣</span><small>Peso</small></button>
-  <button type="button" id="mobileMoreBtn"><span class="navIcon navDots">•••</span><small>Altro</small></button>
+  <button data-tab="todayView"><span class="navIcon">▣</span><small>Oggi</small></button>
+  <button type="button" id="quickAddBtn" class="navAdd"><span>＋</span><small>Inserisci</small></button>
+  <button data-tab="explore"><span class="navIcon">▥</span><small>Grafici</small></button>
+  <button type="button" id="mobileMoreBtn"><span class="navIcon navDots">☰</span><small>Menu</small></button>
 </nav>
+
+<div class="quick-add-backdrop" id="quickAddBackdrop" aria-hidden="true"></div>
+<section class="quick-add-sheet" id="quickAddSheet" aria-hidden="true">
+  <div class="sheet-handle"></div>
+  <div class="quickAddHead"><div><small>NUOVA REGISTRAZIONE</small><h2>Cosa vuoi inserire?</h2></div><button id="quickAddClose">×</button></div>
+  <div class="quickAddGrid">
+    <button data-modal="pressureModal"><span class="qa red">♥</span><b>Pressione</b></button>
+    <button data-modal="weightModal"><span class="qa blue">⚖</span><b>Peso</b></button>
+    <button data-modal="mealModal"><span class="qa purple">🍽</span><b>Pasto</b></button>
+    <button data-modal="labModal"><span class="qa green">⚗</span><b>Analisi</b></button>
+    <button data-modal="medModal"><span class="qa amber">✚</span><b>Farmaco</b></button>
+    <button data-modal="dietModal"><span class="qa teal">◉</span><b>Dieta</b></button>
+  </div>
+</section>
+
 <div class="mobile-more-backdrop" id="mobileMoreBackdrop" aria-hidden="true"></div>
 <section class="mobile-more-sheet" id="mobileMoreSheet" aria-hidden="true" aria-label="Altre sezioni">
   <div class="sheet-handle"></div>

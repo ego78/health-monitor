@@ -142,3 +142,7 @@ Nuova icona 1024/512/192 + maskable Android; splash screen nitida; dashboard, ca
 
 ## V3.1.1 — Splash fix
 Corretto il blocco sulla schermata iniziale: la splash ora si chiude in modo indipendente dal caricamento di app.js, v3.js e dall'API, con timeout di sicurezza. Aggiornata anche la cache del service worker.
+
+
+## V3.2 — Restyling interno completo
+Basata sulla V3.1.1 stabile. Nuova Dashboard, nuova navigazione smartphone Home/Oggi/Inserisci/Grafici/Menu, pulsante centrale Inserisci con pannello rapido, card salute ridisegnate, piano alimentare in evidenza, grafico e attività recenti riorganizzati, schermata Oggi e schermate interne armonizzate, modali e menu mobile ridisegnati. Icona, splash, backend e database restano quelli della V3.1.1/V3.0.

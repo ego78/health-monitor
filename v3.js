@@ -91,3 +91,26 @@ setTimeout(()=>{
    $('#restoreBackup').onclick=async()=>{const file=$('#restoreFile').files[0];if(!file)return toast('Seleziona un file JSON');try{const obj=JSON.parse(await file.text()),data=obj.data||obj,ops=[];for(const entity of Object.keys(S)){for(const rec of (data[entity]||[])){if(!S[entity].some(x=>x.id===rec.id))ops.push({action:'create',entity,data:rec})}}if(!ops.length)return $('#restoreStatus').textContent='Nessun nuovo record da importare.';for(let i=0;i<ops.length;i+=50)await apiPost({action:'bulk',operations:ops.slice(i,i+50)});$('#restoreStatus').textContent=`Importati ${ops.length} record.`;await refresh()}catch(e){$('#restoreStatus').textContent='Errore: '+e.message}};
  }
 },400);
+
+/* V3.2 UI helpers */
+function renderV32Chrome(){
+  const d=new Date();
+  const days=['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato'];
+  const months=['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'];
+  const hero=document.getElementById('heroDate');
+  if(hero)hero.textContent=`${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  const active=S.DIETS.filter(x=>x.startDate<=v3Today()&&(!x.endDate||x.endDate>=v3Today())).sort((a,b)=>String(b.startDate).localeCompare(String(a.startDate)))[0];
+  const bn=document.getElementById('dietBannerName'),bi=document.getElementById('dietBannerInfo');
+  if(bn)bn.textContent=active?.name||'Nessun piano attivo';
+  if(bi)bi.textContent=active?`${active.kcal||'—'} kcal · C ${active.carbsG||'—'}g · P ${active.proteinG||'—'}g · G ${active.fatG||'—'}g`:'Aggiungi un periodo alimentare';
+}
+const _v3RenderAll32=v3RenderAll;
+v3RenderAll=function(){_v3RenderAll32();renderV32Chrome()};
+
+(function(){
+  const sheet=document.getElementById('quickAddSheet'),back=document.getElementById('quickAddBackdrop'),open=document.getElementById('quickAddBtn'),close=document.getElementById('quickAddClose');
+  function toggle(on){sheet?.classList.toggle('open',on);back?.classList.toggle('open',on);sheet?.setAttribute('aria-hidden',String(!on));back?.setAttribute('aria-hidden',String(!on))}
+  open?.addEventListener('click',()=>toggle(true));close?.addEventListener('click',()=>toggle(false));back?.addEventListener('click',()=>toggle(false));
+  sheet?.querySelectorAll('[data-modal]').forEach(b=>b.addEventListener('click',()=>toggle(false)));
+})();
+setTimeout(renderV32Chrome,200);

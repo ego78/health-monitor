@@ -241,3 +241,98 @@ html[data-theme="dark"]{--bg:#07111f;--surface:#0f1c2d;--surface2:#14243a;--text
 body{letter-spacing:-.01em}.page-heading h1{font-weight:850;letter-spacing:-.035em}.panel,.metric,.quick,.dayCard{border-color:color-mix(in srgb,var(--line) 82%,transparent);box-shadow:var(--shadow)}.primary{background:linear-gradient(135deg,#0a86ff,#075eea);border-radius:14px}.iconBtn{border-radius:15px}.quick{border-radius:20px}.mobileWelcome{display:none}
 .appSplash{position:fixed;inset:0;z-index:9999;background:linear-gradient(155deg,#20b7f3,#0877f9 48%,#064ed0);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;transition:opacity .36s,visibility .36s}.appSplash.hide{opacity:0;visibility:hidden}.splashGlow{position:absolute;width:420px;height:420px;border-radius:50%;background:rgba(255,255,255,.11);filter:blur(40px)}.appSplash img{position:relative;width:104px;height:104px;border-radius:28px;box-shadow:0 20px 55px rgba(0,48,140,.3)}.appSplash strong{position:relative;margin-top:25px;font-size:29px;letter-spacing:-.04em}.appSplash span{position:relative;margin-top:7px;font-size:14px;opacity:.82}.appSplash i{position:relative;width:28px;height:28px;border:3px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;margin-top:38px;animation:hmspin .8s linear infinite}@keyframes hmspin{to{transform:rotate(360deg)}}
 @media(max-width:760px){body{background:linear-gradient(180deg,#f8fbff,#f1f6fd 320px,var(--bg))}html[data-theme="dark"] body{background:var(--bg)}.topbar{height:76px;padding:8px 18px 6px}.page-heading h1{font-size:25px}.page-heading p{font-size:12px}main{padding:12px 14px calc(106px + env(safe-area-inset-bottom))}.mobileWelcome{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;margin-bottom:12px;background:linear-gradient(120deg,#0a82ff,#075bdc);border-radius:22px;color:#fff;box-shadow:0 12px 28px rgba(8,119,249,.2)}.mobileWelcome div{display:flex;flex-direction:column}.mobileWelcome small{font-size:9px;letter-spacing:.12em;opacity:.72}.mobileWelcome strong{font-size:15px;margin-top:3px}.mobileWelcome img{width:44px;height:44px;border-radius:13px}.metric-grid{gap:11px}.metric{min-height:112px;border-radius:22px;padding:14px}.metric strong{font-size:22px}.panel{border-radius:22px;padding:16px;margin-top:12px}.quick-grid{gap:10px}.quick{min-height:110px;border-radius:21px}.mobile-nav{left:10px;right:10px;bottom:8px;height:78px;border:1px solid var(--line);border-radius:24px;box-shadow:0 14px 36px rgba(24,57,105,.18);backdrop-filter:blur(18px)}.mobile-nav button{border-radius:18px}.mobile-nav button.active{background:linear-gradient(180deg,#eaf4ff,#dfedff);color:#0877f9}.mobile-nav small{font-size:10px;font-weight:700}.dayCard{border-radius:20px}dialog{border-radius:27px!important}}
+
+/* =========================================================
+   HEALTH MONITOR V3.2 — INTERNAL UI REDESIGN
+   ========================================================= */
+:root{
+ --hm-blue:#0877f9;--hm-navy:#0a2855;--hm-soft:#f4f8fd;--hm-red:#ff5570;
+ --hm-green:#16ad70;--hm-purple:#7857ed;--hm-orange:#f4a323;
+}
+@media(max-width:760px){
+ body{background:#f5f8fc!important;color:var(--hm-navy)}
+ .content-wrap{background:transparent}
+ .topbar{height:66px!important;padding:8px 18px!important;border:0!important;background:rgba(245,248,252,.94)!important;backdrop-filter:blur(18px)}
+ .page-heading h1{font-size:20px!important}.page-heading p{display:none}
+ .top-actions{gap:8px}.iconBtn{width:39px;height:39px;border-radius:50%!important;background:#fff!important;border:1px solid #e4ebf5!important}
+ main{padding:4px 14px 112px!important}
+ #dashboard{margin:0 -2px}
+ .mobileWelcome{display:none!important}
+
+ .hmHero{display:flex;justify-content:space-between;align-items:center;padding:8px 4px 16px}
+ .heroEyebrow{font-size:10px;font-weight:850;letter-spacing:.13em;color:#7b8ca8}
+ .hmHero h1{font-size:31px;line-height:1;margin:5px 0 7px;letter-spacing:-.045em;color:#0a2855}
+ .hmHero p{margin:0;color:#73839c;font-size:13px}
+ .heroProfile{width:46px;height:46px;border:0;border-radius:50%;background:#fff;color:#0877f9;font-size:25px;box-shadow:0 7px 22px rgba(35,74,126,.09)}
+
+ .hmStatusGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+ .hmStatusCard{min-height:126px;padding:14px;border-radius:22px;border:1px solid rgba(20,50,90,.06);display:flex;flex-direction:column;box-shadow:0 8px 22px rgba(34,69,116,.055);overflow:hidden;position:relative}
+ .hmStatusCard.bpCard{background:linear-gradient(145deg,#fff4f6,#fff)}
+ .hmStatusCard.weightCard{background:linear-gradient(145deg,#edf6ff,#fff)}
+ .hmStatusCard.countCard{background:linear-gradient(145deg,#effbf5,#fff)}
+ .hmStatusCard.foodCard{background:linear-gradient(145deg,#fff8ea,#fff)}
+ .statusTop{display:flex;align-items:center;gap:7px}.statusIcon{font-size:18px}.statusLabel{font-size:12px;font-weight:800;flex:1}.statusArrow{font-size:22px;color:#9aa9bd}
+ .hmStatusCard strong{font-size:21px;line-height:1.15;margin-top:14px;letter-spacing:-.035em;white-space:normal;overflow-wrap:anywhere}
+ .hmStatusCard small{font-size:10.5px;color:#74839b;margin-top:5px;line-height:1.25}.hmStatusCard .macroMini{font-size:9.5px}
+
+ .hmActionStrip{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:16px 0 14px;padding:13px 8px;background:#fff;border:1px solid #e6edf6;border-radius:22px;box-shadow:0 7px 22px rgba(34,69,116,.05)}
+ .hmActionStrip button{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:7px;color:#405573;font-size:10px;padding:0}
+ .actionBubble{width:42px;height:42px;border-radius:15px;display:grid;place-items:center;font-size:18px}.actionBubble.red{background:#fff0f3;color:#ff506b}.actionBubble.blue{background:#eaf4ff;color:#0877f9}.actionBubble.purple{background:#f2edff;color:#7857ed}.actionBubble.green{background:#e9faf2;color:#13a96b}
+
+ .hmDietBanner{display:grid;grid-template-columns:46px 1fr 18px;align-items:center;gap:10px;padding:15px;background:linear-gradient(110deg,#eafaf3,#f7fffb);border:1px solid #d5f1e4;border-radius:22px;margin-bottom:14px}
+ .dietLeaf{width:44px;height:44px;border-radius:15px;display:grid;place-items:center;background:#d9f6e9;color:#13a96b;font-size:21px}
+ .hmDietBanner div{min-width:0;display:flex;flex-direction:column}.hmDietBanner small{font-size:8.5px;letter-spacing:.08em;color:#3b9b70;font-weight:850}.hmDietBanner strong{font-size:14px;margin:3px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.hmDietBanner span{font-size:10px;color:#718497}.hmDietBanner>b{font-size:25px;color:#8ba0ad}
+
+ .hmTrend.panel{padding:17px!important;border-radius:24px!important;background:#fff!important;border:1px solid #e7edf6!important;box-shadow:0 8px 25px rgba(34,69,116,.055)!important}
+ .hmPanelTitle{display:flex;align-items:center;justify-content:space-between}.hmPanelTitle h2{margin:0;font-size:18px}.hmPanelTitle p{margin:2px 0 0;font-size:11px;color:#7c8da6}.hmPanelTitle select{width:auto;min-height:34px!important;padding:5px 28px 5px 10px;font-size:11px;border-radius:11px}
+ .trendLegend{display:flex;gap:14px;margin:12px 0 2px;font-size:10px;color:#71839c}.trendLegend span{display:flex;align-items:center;gap:5px}.dot{width:7px;height:7px;border-radius:50%;display:block}.dot.sys{background:#1684ff}.dot.dia{background:#ff5570}
+ .hmChart{height:235px!important;margin-top:3px}
+
+ .hmSectionTitle{display:flex;justify-content:space-between;align-items:flex-end;margin:19px 4px 8px}.hmSectionTitle h2{font-size:18px;margin:0}.hmSectionTitle p{font-size:10px;color:#8290a5;margin:2px 0 0}.hmSectionTitle button{border:0;background:transparent;color:#0877f9;font-size:11px;font-weight:750}
+ .hmRecent{padding:5px 13px!important;border-radius:22px!important}.hmRecent .list>*{border-radius:15px}
+ .hmTools{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}.hmTools button{display:grid;grid-template-columns:37px 1fr 10px;align-items:center;text-align:left;gap:8px;border:1px solid #e5edf6;background:#fff;border-radius:19px;padding:13px;color:#18365f}.hmTools>button>span{width:37px;height:37px;border-radius:13px;background:#edf5ff;color:#0877f9;display:grid;place-items:center;font-size:18px}.hmTools div{display:flex;flex-direction:column}.hmTools b{font-size:12px}.hmTools small{font-size:9px;color:#8290a5;margin-top:2px}.hmTools i{font-style:normal;color:#9aacbf;font-size:20px}
+
+ /* Oggi */
+ #todayView .sectionHead{padding:9px 3px 4px}#todayView .sectionHead h1{font-size:29px!important}
+ .todayGrid{gap:9px!important}.dayCard{min-height:104px!important;padding:13px!important;border-radius:20px!important;background:#fff!important;border:1px solid #e5edf6!important;box-shadow:0 6px 18px rgba(35,70,115,.045)!important}
+ .dayCard span{font-size:10px!important;text-transform:uppercase;letter-spacing:.04em;font-weight:800}.dayCard b{font-size:18px!important}.dayCard small{font-size:9.5px!important}
+ #todayView .panel{border:1px solid #e5edf6!important;background:#fff!important;box-shadow:0 7px 22px rgba(34,69,116,.05)!important}
+ .macroRow .progress{background:#edf2f8!important}.macroRow .progress i{background:linear-gradient(90deg,#0877f9,#16ad70)!important}
+ .todayItem{border:0!important;background:#f7f9fc!important;border-radius:16px!important}
+
+ /* Internal screens */
+ .sectionHead{padding:10px 3px 7px;align-items:center}.sectionHead h1{font-size:27px!important;letter-spacing:-.04em}.sectionHead p{font-size:11px;color:#7b8ba3}
+ .sectionHead>.primary{border-radius:14px!important;font-size:11px;padding:10px 12px}
+ .metric-grid.compact{gap:9px!important}.metric-grid.compact .metric{min-height:92px!important;border-radius:19px!important;background:#fff!important;border:1px solid #e5edf6!important;box-shadow:none!important}
+ .view>.panel{border-radius:23px!important;border:1px solid #e5edf6!important;box-shadow:0 7px 22px rgba(34,69,116,.045)!important}
+ .filters{background:#fff;border:1px solid #e5edf6;padding:10px;border-radius:18px;margin:8px 0}
+ .timelineCards>*{border-radius:21px!important}
+ .reportControls,.compareControls{gap:9px!important}
+
+ /* Bottom navigation */
+ .hmBottomNav{height:78px!important;left:9px!important;right:9px!important;bottom:7px!important;padding:6px 5px calc(5px + env(safe-area-inset-bottom))!important;border-radius:25px!important;border:1px solid #e0e9f4!important;background:rgba(255,255,255,.96)!important;box-shadow:0 15px 38px rgba(31,66,112,.19)!important;overflow:visible!important}
+ .hmBottomNav button{height:58px!important;position:relative;color:#71839d!important}.hmBottomNav button.active{background:transparent!important;color:#0877f9!important}.hmBottomNav button.active:after{content:"";position:absolute;top:2px;width:5px;height:5px;background:#0877f9;border-radius:50%}
+ .hmBottomNav .navIcon{font-size:20px!important}.hmBottomNav small{font-size:9px!important}
+ .hmBottomNav .navAdd{transform:translateY(-17px);color:#fff!important}.hmBottomNav .navAdd>span{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#1591ff,#0863ed);font-size:31px;line-height:1;box-shadow:0 9px 24px rgba(8,119,249,.34);border:4px solid #fff}.hmBottomNav .navAdd small{color:#536b89;margin-top:3px}
+
+ /* Quick-add sheet */
+ .quick-add-backdrop{display:none;position:fixed;inset:0;background:rgba(5,22,46,.34);z-index:1200;backdrop-filter:blur(2px)}.quick-add-backdrop.open{display:block}
+ .quick-add-sheet{position:fixed;left:8px;right:8px;bottom:-500px;z-index:1201;background:#fff;border-radius:28px 28px 20px 20px;padding:9px 17px 25px;box-shadow:0 -18px 50px rgba(13,43,82,.2);transition:bottom .25s ease}.quick-add-sheet.open{bottom:8px}
+ .quickAddHead{display:flex;align-items:center;justify-content:space-between;margin:10px 0 14px}.quickAddHead small{font-size:9px;color:#8797ac;letter-spacing:.1em;font-weight:800}.quickAddHead h2{margin:2px 0 0;font-size:21px}.quickAddHead button{border:0;background:#f1f4f8;width:34px;height:34px;border-radius:50%;font-size:21px}
+ .quickAddGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.quickAddGrid button{border:1px solid #e6edf6;background:#fafcff;border-radius:19px;padding:13px 5px;display:flex;flex-direction:column;align-items:center;gap:7px;color:#263f62}.quickAddGrid b{font-size:10px}.qa{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;font-size:18px}.qa.red{background:#fff0f3;color:#ff5570}.qa.blue{background:#eaf4ff;color:#0877f9}.qa.purple{background:#f2edff;color:#7857ed}.qa.green{background:#eafaf3;color:#16ad70}.qa.amber{background:#fff6e6;color:#e69a18}.qa.teal{background:#e9fbfa;color:#159f99}
+
+ /* Dialogs */
+ dialog{width:min(94vw,520px)!important;border-radius:28px!important;border:0!important;box-shadow:0 24px 70px rgba(11,38,76,.25)!important}.modalTitle{padding-bottom:12px;border-bottom:1px solid #edf1f6}.modalTitle h2{font-size:21px}.modalForm label{font-size:10px;font-weight:800;color:#647994}.modalForm input,.modalForm select,.modalForm textarea{background:#f7f9fc!important;border:1px solid #e2e9f2!important;border-radius:14px!important}.modalActions{background:#fff!important;border-top:1px solid #edf1f6!important}
+
+ /* More sheet */
+ .mobile-more-sheet{border-radius:28px 28px 0 0!important}.mobile-more-sheet button{border-radius:15px!important}
+}
+@media(min-width:761px){
+ .hmHero{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.hmHero h1{font-size:32px;margin:3px 0}.heroEyebrow{font-size:10px;letter-spacing:.1em;color:var(--muted);font-weight:800}.heroProfile{display:none}
+ .hmStatusGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.hmStatusCard{padding:18px;border-radius:22px;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;min-height:130px}.statusTop{display:flex;gap:8px}.statusLabel{flex:1}.hmStatusCard strong{font-size:21px;margin-top:20px}.hmStatusCard small{color:var(--muted);margin-top:5px}
+ .hmActionStrip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:15px 0}.hmActionStrip button{padding:13px;border:1px solid var(--line);background:var(--surface);border-radius:18px}.actionBubble{margin-right:7px}
+ .hmDietBanner{display:flex;gap:12px;align-items:center;padding:16px;border-radius:20px;background:var(--surface);border:1px solid var(--line);margin-bottom:15px}.hmDietBanner div{display:flex;flex-direction:column;flex:1}.hmDietBanner>b{font-size:24px}
+ .hmPanelTitle,.hmSectionTitle{display:flex;justify-content:space-between;align-items:center}.trendLegend{display:flex;gap:15px}.trendLegend span{display:flex;align-items:center;gap:5px}.dot{width:7px;height:7px;border-radius:50%}.dot.sys{background:#1684ff}.dot.dia{background:#ff5570}
+ .hmTools{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:15px}.hmTools button{padding:14px;border:1px solid var(--line);border-radius:18px;background:var(--surface);display:flex;gap:10px}
+ .quick-add-sheet,.quick-add-backdrop{display:none}
+}
