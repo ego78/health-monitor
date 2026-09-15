@@ -158,3 +158,10 @@ Applicata l'icona scelta: figura umana stilizzata blu/ciano con linea ECG su fon
 
 ## V3.2.3 — Cartella icons
 Tutte le nuove icone sono ora nella cartella `icons/`. Aggiornati automaticamente index.html, manifest.json e service worker con i nuovi percorsi. Funzioni dell'app invariate.
+
+
+## V3.3 — Health Insights
+Aggiunte tutte le funzioni richieste: Dashboard intelligente con confronti 7 giorni, pressione avanzata (90 giorni, differenziale, battiti, mattina/sera), analisi evolute con stato rispetto ai range, correlazioni statistiche, diario benessere (sonno/attività/acqua/stress/note), terapie con giorni e promemoria, report visita medica, importazione referti PDF/foto con revisione prima del salvataggio, ricerca globale e Home personalizzabile.
+
+### Aggiornamento necessario
+Questa versione aggiunge il foglio DAILY e nuovi campi a MEDS. Sostituire Code.gs, eseguire `setupDatabase()` una volta e poi creare una nuova distribuzione della Web App Apps Script. I dati esistenti vengono mantenuti: setupDatabase aggiunge solo fogli/colonne mancanti.

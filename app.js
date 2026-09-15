@@ -1,4 +1,4 @@
-const S={PRESSURE:[],WEIGHT:[],LABS:[],DIETS:[],MEDS:[],EVENTS:[]};
+const S={PRESSURE:[],WEIGHT:[],LABS:[],DIETS:[],MEDS:[],EVENTS:[],MEALS:[],INTAKE:[],DAILY:[]};
 const charts={};
 const cfg=()=>({url:localStorage.getItem('hm_api_url')||'',token:localStorage.getItem('hm_api_token')||''});
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];

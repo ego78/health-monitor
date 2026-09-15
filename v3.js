@@ -3,9 +3,9 @@
 S.MEALS=S.MEALS||[]; S.INTAKE=S.INTAKE||[];
 let exploreChartV3=null, bpTimerHandle=null, bpSeconds=60;
 const v3Today=()=>new Date().toISOString().slice(0,10);
-const n=v=>Number(v||0);
+const v3n=v=>Number(v||0);
 const sameDay=(v,d)=>String(v||'').slice(0,10)===d;
-const sum=(arr,k)=>arr.reduce((a,x)=>a+n(x[k]),0);
+const sum=(arr,k)=>arr.reduce((a,x)=>a+v3n(x[k]),0);
 
 function activeDietOn(d){
   return S.DIETS.filter(x=>x.startDate<=d&&(!x.endDate||x.endDate>=d)).sort((a,b)=>String(b.startDate).localeCompare(String(a.startDate)))[0]||null;
@@ -19,10 +19,10 @@ function renderTodayV3(){
   const meals=S.MEALS.filter(x=>sameDay(x.date,d)), diet=activeDietOn(d);
   const totals={kcal:sum(meals,'kcal'),proteinG:sum(meals,'proteinG'),fatG:sum(meals,'fatG'),carbsG:sum(meals,'carbsG')};
   const bp=S.PRESSURE.filter(x=>sameDay(x.datetime,d)), weights=S.WEIGHT.filter(x=>sameDay(x.date,d));
-  const avgK=k=>bp.length?Math.round(bp.reduce((a,x)=>a+n(x[k]),0)/bp.length):null;
-  $('#todaySummary').innerHTML=`<article class="dayCard"><span>Pressione</span><b>${bp.length?avgK('systolic')+'/'+avgK('diastolic'):'—'}</b><small>${bp.length} sessioni</small></article><article class="dayCard"><span>Peso</span><b>${weights.length?n(weights.at(-1).weightKg).toFixed(1)+' kg':'—'}</b><small>${weights.length?'registrato oggi':'nessun dato'}</small></article><article class="dayCard"><span>Alimentazione</span><b>${Math.round(totals.kcal)} kcal</b><small>${meals.length} pasti</small></article><article class="dayCard"><span>Piano</span><b>${diet?esc(diet.name):'—'}</b><small>${diet?diet.kcal+' kcal target':'nessun piano attivo'}</small></article>`;
-  $('#macroProgress').innerHTML=diet?`${v3Progress('Calorie',totals.kcal,n(diet.kcal),' kcal')}${v3Progress('Proteine',totals.proteinG,n(diet.proteinG),' g')}${v3Progress('Grassi',totals.fatG,n(diet.fatG),' g')}${v3Progress('Carboidrati',totals.carbsG,n(diet.carbsG),' g')}`:'<p class="muted">Nessun piano alimentare attivo per questa data.</p>';
-  $('#todayMeals').innerHTML=meals.length?meals.map(x=>`<div class="todayItem"><div><small>${esc(x.mealType)}</small><b>${esc(x.name)}</b><span>${n(x.kcal)} kcal · P ${n(x.proteinG)}g · G ${n(x.fatG)}g · C ${n(x.carbsG)}g</span></div><button onclick="v3Delete('MEALS','${x.id}')">×</button></div>`).join(''):'<p class="muted">Nessun pasto registrato.</p>';
+  const avgK=k=>bp.length?Math.round(bp.reduce((a,x)=>a+v3n(x[k]),0)/bp.length):null;
+  $('#todaySummary').innerHTML=`<article class="dayCard"><span>Pressione</span><b>${bp.length?avgK('systolic')+'/'+avgK('diastolic'):'—'}</b><small>${bp.length} sessioni</small></article><article class="dayCard"><span>Peso</span><b>${weights.length?v3n(weights.at(-1).weightKg).toFixed(1)+' kg':'—'}</b><small>${weights.length?'registrato oggi':'nessun dato'}</small></article><article class="dayCard"><span>Alimentazione</span><b>${Math.round(totals.kcal)} kcal</b><small>${meals.length} pasti</small></article><article class="dayCard"><span>Piano</span><b>${diet?esc(diet.name):'—'}</b><small>${diet?diet.kcal+' kcal target':'nessun piano attivo'}</small></article>`;
+  $('#macroProgress').innerHTML=diet?`${v3Progress('Calorie',totals.kcal,v3n(diet.kcal),' kcal')}${v3Progress('Proteine',totals.proteinG,v3n(diet.proteinG),' g')}${v3Progress('Grassi',totals.fatG,v3n(diet.fatG),' g')}${v3Progress('Carboidrati',totals.carbsG,v3n(diet.carbsG),' g')}`:'<p class="muted">Nessun piano alimentare attivo per questa data.</p>';
+  $('#todayMeals').innerHTML=meals.length?meals.map(x=>`<div class="todayItem"><div><small>${esc(x.mealType)}</small><b>${esc(x.name)}</b><span>${v3n(x.kcal)} kcal · P ${v3n(x.proteinG)}g · G ${v3n(x.fatG)}g · C ${v3n(x.carbsG)}g</span></div><button onclick="v3Delete('MEALS','${x.id}')">×</button></div>`).join(''):'<p class="muted">Nessun pasto registrato.</p>';
   renderTodayMedsV3(d);
 }
 function intakeFor(medId,d){return S.INTAKE.find(x=>x.medId===medId&&x.date===d)}
@@ -53,14 +53,14 @@ function renderExploreV3(){
   if(!$('#exploreTo').value)$('#exploreTo').value=v3Today(); if(!$('#exploreFrom').value)$('#exploreFrom').value=dateAdd(v3Today(),-90);
   const a=$('#exploreFrom').value,b=$('#exploreTo').value;
   const labels=[...new Set([...S.PRESSURE.filter(x=>inRange(x.datetime,a,b)).map(x=>String(x.datetime).slice(0,10)),...S.WEIGHT.filter(x=>inRange(x.date,a,b)).map(x=>x.date),...S.MEALS.filter(x=>inRange(x.date,a,b)).map(x=>x.date)])].sort();
-  const bpFor=(d,k)=>{const z=S.PRESSURE.filter(x=>sameDay(x.datetime,d));return z.length?Math.round(z.reduce((s,x)=>s+n(x[k]),0)/z.length*10)/10:null};
-  const wFor=d=>{const z=S.WEIGHT.filter(x=>sameDay(x.date,d));return z.length?n(z.at(-1).weightKg):null};
+  const bpFor=(d,k)=>{const z=S.PRESSURE.filter(x=>sameDay(x.datetime,d));return z.length?Math.round(z.reduce((s,x)=>s+v3n(x[k]),0)/z.length*10)/10:null};
+  const wFor=d=>{const z=S.WEIGHT.filter(x=>sameDay(x.date,d));return z.length?v3n(z.at(-1).weightKg):null};
   const ds=[];
   if($('#exSys').checked)ds.push({label:'Sistolica',data:labels.map(d=>bpFor(d,'systolic')),spanGaps:true,yAxisID:'y'});
   if($('#exDia').checked)ds.push({label:'Diastolica',data:labels.map(d=>bpFor(d,'diastolic')),spanGaps:true,yAxisID:'y'});
   if($('#exWeight').checked)ds.push({label:'Peso kg',data:labels.map(wFor),spanGaps:true,yAxisID:'y1'});
   for(const [id,key,label] of [['exKcal','kcal','Kcal'],['exProtein','proteinG','Proteine g'],['exCarbs','carbsG','Carboidrati g'],['exFat','fatG','Grassi g']])if($('#'+id).checked)ds.push({label,data:labels.map(d=>dayMealsTotals(d)[key]),spanGaps:true,yAxisID:'y2'});
-  const lab=$('#exLab').value;if(lab){ds.push({label:lab,data:labels.map(d=>{const z=S.LABS.filter(x=>x.parameter===lab&&sameDay(x.date,d));return z.length?n(z.at(-1).value):null}),spanGaps:true,yAxisID:'y2'})}
+  const lab=$('#exLab').value;if(lab){ds.push({label:lab,data:labels.map(d=>{const z=S.LABS.filter(x=>x.parameter===lab&&sameDay(x.date,d));return z.length?v3n(z.at(-1).value):null}),spanGaps:true,yAxisID:'y2'})}
   if(exploreChartV3)exploreChartV3.destroy(); exploreChartV3=new Chart($('#exploreChart'),{type:'line',data:{labels:labels.map(dateFmt),datasets:ds},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},scales:{y:{position:'left'},y1:{position:'right',grid:{drawOnChartArea:false}},y2:{display:false}}}});
   const periods=[...S.DIETS.filter(x=>x.startDate<=b&&(x.endDate||v3Today())>=a).map(x=>`Dieta: ${x.name} (${dateFmt(x.startDate)}→${x.endDate?dateFmt(x.endDate):'oggi'})`),...S.MEDS.filter(x=>x.startDate<=b&&(x.endDate||v3Today())>=a).map(x=>`${x.type}: ${x.name}`)];
   $('#explorePeriods').innerHTML=periods.map(x=>`<span>${esc(x)}</span>`).join('');
@@ -76,7 +76,7 @@ function queueOfflineV3(action,entity,data,id){const q=JSON.parse(localStorage.g
 async function syncOfflineV3(){if(!navigator.onLine)return;const q=JSON.parse(localStorage.getItem('hm_offline_queue')||'[]');if(!q.length)return;const left=[];for(const op of q){try{await apiPost(op)}catch(e){left.push(op)}}localStorage.setItem('hm_offline_queue',JSON.stringify(left));if(left.length!==q.length){toast(`Sincronizzati ${q.length-left.length} dati offline`);try{await refresh()}catch(_){}}}
 window.addEventListener('online',syncOfflineV3);
 
-$('#mealForm')?.addEventListener('submit',async e=>{e.preventDefault();const f=e.currentTarget;if(!f.reportValidity())return;const data=Object.fromEntries(new FormData(f).entries());for(const k of ['kcal','proteinG','fatG','carbsG'])data[k]=n(data[k]);try{const j=await apiPost({action:'create',entity:'MEALS',data});S.MEALS.push(j.data);$('#mealModal').close();f.reset();renderTodayV3();toast('Pasto salvato')}catch(err){data.id=crypto.randomUUID();S.MEALS.push(data);queueOfflineV3('create','MEALS',data);$('#mealModal').close();renderTodayV3();toast('Pasto salvato offline')}});
+$('#mealForm')?.addEventListener('submit',async e=>{e.preventDefault();const f=e.currentTarget;if(!f.reportValidity())return;const data=Object.fromEntries(new FormData(f).entries());for(const k of ['kcal','proteinG','fatG','carbsG'])data[k]=v3n(data[k]);try{const j=await apiPost({action:'create',entity:'MEALS',data});S.MEALS.push(j.data);$('#mealModal').close();f.reset();renderTodayV3();toast('Pasto salvato')}catch(err){data.id=crypto.randomUUID();S.MEALS.push(data);queueOfflineV3('create','MEALS',data);$('#mealModal').close();renderTodayV3();toast('Pasto salvato offline')}});
 $('#todayDate')?.addEventListener('change',renderTodayV3);
 $('#runExplore')?.addEventListener('click',renderExploreV3);$('#historySearch')?.addEventListener('input',renderHistoryV3);$('#historyType')?.addEventListener('change',renderHistoryV3);
 $('#startBpTimer')?.addEventListener('click',()=>{clearInterval(bpTimerHandle);bpSeconds=60;const box=$('#bpTimer');const draw=()=>{box.textContent=`${String(Math.floor(bpSeconds/60)).padStart(2,'0')}:${String(bpSeconds%60).padStart(2,'0')}`};draw();bpTimerHandle=setInterval(()=>{bpSeconds--;draw();if(bpSeconds<=0){clearInterval(bpTimerHandle);box.textContent='Pronto ✓';if(navigator.vibrate)navigator.vibrate([150,100,150])}},1000)});
