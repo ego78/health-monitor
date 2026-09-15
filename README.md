@@ -150,3 +150,7 @@ Basata sulla V3.1.1 stabile. Nuova Dashboard, nuova navigazione smartphone Home/
 
 ## V3.2.1 — Fix Inserisci
 Corretto il pulsante centrale Inserisci: il pannello di registrazione rapida viene ora gestito direttamente dal codice principale dell'app e non dipende dall'inizializzazione tardiva di v3.js.
+
+
+## V3.2.2 — Nuova icona Opzione 2
+Applicata l'icona scelta: figura umana stilizzata blu/ciano con linea ECG su fondo chiaro. Generate tutte le dimensioni PWA, Apple Touch e versioni maskable. Funzioni e database invariati rispetto alla V3.2.1.
