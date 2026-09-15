@@ -107,10 +107,4 @@ function renderV32Chrome(){
 const _v3RenderAll32=v3RenderAll;
 v3RenderAll=function(){_v3RenderAll32();renderV32Chrome()};
 
-(function(){
-  const sheet=document.getElementById('quickAddSheet'),back=document.getElementById('quickAddBackdrop'),open=document.getElementById('quickAddBtn'),close=document.getElementById('quickAddClose');
-  function toggle(on){sheet?.classList.toggle('open',on);back?.classList.toggle('open',on);sheet?.setAttribute('aria-hidden',String(!on));back?.setAttribute('aria-hidden',String(!on))}
-  open?.addEventListener('click',()=>toggle(true));close?.addEventListener('click',()=>toggle(false));back?.addEventListener('click',()=>toggle(false));
-  sheet?.querySelectorAll('[data-modal]').forEach(b=>b.addEventListener('click',()=>toggle(false)));
-})();
 setTimeout(renderV32Chrome,200);

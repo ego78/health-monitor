@@ -277,3 +277,25 @@ window.editRecord=(entity,id)=>{const rec=S[entity].find(x=>x.id===id);const mod
 
 $('#runBeforeAfter')?.addEventListener('click',renderBeforeAfter);$('#eventCompare')?.addEventListener('change',renderBeforeAfter);$('#eventDays')?.addEventListener('change',renderBeforeAfter);$('#refreshTimeline')?.addEventListener('click',renderTimeline);$('#timelineType')?.addEventListener('change',renderTimeline);$('#buildReport')?.addEventListener('click',renderReport);$('#reportPreset')?.addEventListener('change',()=>{reportRange();renderReport()});$('#printReport')?.addEventListener('click',()=>{renderReport();window.print()});
 renderBeforeAfterSelectors();initReportDates();
+
+
+// V3.2.1 - Quick Add robust handler
+(function initQuickAdd(){
+  const sheet=document.getElementById('quickAddSheet');
+  const backdrop=document.getElementById('quickAddBackdrop');
+  const openBtn=document.getElementById('quickAddBtn');
+  const closeBtn=document.getElementById('quickAddClose');
+  if(!sheet || !backdrop || !openBtn) return;
+  const setOpen=(open)=>{
+    sheet.classList.toggle('open',open);
+    backdrop.classList.toggle('open',open);
+    sheet.setAttribute('aria-hidden',String(!open));
+    backdrop.setAttribute('aria-hidden',String(!open));
+  };
+  openBtn.onclick=(e)=>{ e.preventDefault(); e.stopPropagation(); setOpen(true); };
+  if(closeBtn) closeBtn.onclick=(e)=>{ e.preventDefault(); setOpen(false); };
+  backdrop.onclick=()=>setOpen(false);
+  sheet.querySelectorAll('[data-modal]').forEach(btn=>{
+    btn.addEventListener('click',()=>setOpen(false));
+  });
+})();

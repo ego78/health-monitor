@@ -146,3 +146,7 @@ Corretto il blocco sulla schermata iniziale: la splash ora si chiude in modo ind
 
 ## V3.2 — Restyling interno completo
 Basata sulla V3.1.1 stabile. Nuova Dashboard, nuova navigazione smartphone Home/Oggi/Inserisci/Grafici/Menu, pulsante centrale Inserisci con pannello rapido, card salute ridisegnate, piano alimentare in evidenza, grafico e attività recenti riorganizzati, schermata Oggi e schermate interne armonizzate, modali e menu mobile ridisegnati. Icona, splash, backend e database restano quelli della V3.1.1/V3.0.
+
+
+## V3.2.1 — Fix Inserisci
+Corretto il pulsante centrale Inserisci: il pannello di registrazione rapida viene ora gestito direttamente dal codice principale dell'app e non dipende dall'inizializzazione tardiva di v3.js.
