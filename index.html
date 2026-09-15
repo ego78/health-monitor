@@ -15,7 +15,19 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
 <body>
-<div id="appSplash" class="appSplash" aria-hidden="true"><div class="splashGlow"></div><img src="icons/icon-512.png" alt=""><strong>Health Monitor</strong><span>Il tuo benessere, ogni giorno</span><i></i></div>
+<div id="appSplash" class="appSplash" aria-hidden="true"><div class="splashGlow"></div><img src="icons/icon-512.png" alt=""><strong>Health Monitor</strong><span>Il tuo benessere, ogni giorno</span><i></i></div><script>
+(function(){
+  var splash=document.getElementById('appSplash');
+  function closeSplash(){
+    if(!splash)return;
+    splash.classList.add('hide');
+    setTimeout(function(){ if(splash&&splash.parentNode) splash.parentNode.removeChild(splash); },420);
+  }
+  // Independent from app.js/v3.js/API: splash can never block the application.
+  window.setTimeout(closeSplash,900);
+  window.addEventListener('load',function(){window.setTimeout(closeSplash,180);});
+})();
+</script>
 <div class="app-shell">
   <aside class="sidebar">
     <div class="brand"><img src="icons/icon-96.png" alt=""><div><strong>Health Monitor</strong><small>I tuoi dati, la tua salute</small></div></div>
@@ -34,7 +46,7 @@
       <button data-tab="data"><span>⇩</span>Dati & backup</button>
     </nav>
     <div class="sidebar-note"><span>☀</span><p>Piccoli passi,<br><strong>grandi risultati.</strong></p></div>
-    <div class="version">Health Monitor V3.1</div>
+    <div class="version">Health Monitor V3.1.1</div>
   </aside>
 
   <div class="content-wrap">
