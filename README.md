@@ -134,3 +134,7 @@ Nuove funzioni:
 - compatibilità con tutti i dati V2.x.
 
 INSTALLAZIONE: aggiornare i file GitHub; copiare il nuovo Code.gs in Apps Script; eseguire setupDatabase() una volta; creare una nuova distribuzione della Web App. setupDatabase aggiunge MEALS e INTAKE senza cancellare i fogli esistenti.
+
+
+## V3.1 Restyle
+Nuova icona 1024/512/192 + maskable Android; splash screen nitida; dashboard, card, menu mobile, pulsanti e popup ridisegnati. Nessuna modifica al database rispetto alla V3.0.

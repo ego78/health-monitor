@@ -91,3 +91,5 @@ setTimeout(()=>{
    $('#restoreBackup').onclick=async()=>{const file=$('#restoreFile').files[0];if(!file)return toast('Seleziona un file JSON');try{const obj=JSON.parse(await file.text()),data=obj.data||obj,ops=[];for(const entity of Object.keys(S)){for(const rec of (data[entity]||[])){if(!S[entity].some(x=>x.id===rec.id))ops.push({action:'create',entity,data:rec})}}if(!ops.length)return $('#restoreStatus').textContent='Nessun nuovo record da importare.';for(let i=0;i<ops.length;i+=50)await apiPost({action:'bulk',operations:ops.slice(i,i+50)});$('#restoreStatus').textContent=`Importati ${ops.length} record.`;await refresh()}catch(e){$('#restoreStatus').textContent='Errore: '+e.message}};
  }
 },400);
+
+window.addEventListener('load',()=>{const s=document.getElementById('appSplash');if(s)setTimeout(()=>{s.classList.add('hide');setTimeout(()=>s.remove(),420)},260)});
