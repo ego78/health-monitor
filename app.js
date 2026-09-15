@@ -41,7 +41,42 @@ function dtFmt(v){if(!v)return '—';return new Date(v).toLocaleString('it-IT',{
 function destroyChart(k){if(charts[k])charts[k].destroy()}
 function chart(k,el,config){destroyChart(k);charts[k]=new Chart($(el),config)}
 
-async function refresh(){try{const j=await apiGet();Object.keys(S).forEach(k=>S[k]=j.data[k]||[]);renderAll();$('#setupBanner').classList.add('hidden');toast('Dati sincronizzati')}catch(e){$('#setupBanner').classList.remove('hidden');console.error(e);toast(e.message)}}
+function updateSetupBanner(){
+  const c=cfg();
+  const banner=$('#setupBanner');
+  if(!banner)return;
+  banner.classList.toggle('hidden',!!(c.url&&c.token));
+}
+
+async function refresh(){
+  const c=cfg();
+  updateSetupBanner();
+  if(!c.url||!c.token){
+    toast('Configura endpoint Apps Script e token');
+    return;
+  }
+  try{
+    const j=await apiGet();
+    // La connessione è riuscita: il banner deve sparire subito,
+    // indipendentemente da eventuali errori di rendering successivi.
+    $('#setupBanner')?.classList.add('hidden');
+    Object.keys(S).forEach(k=>S[k]=j.data[k]||[]);
+    try{
+      renderAll();
+    }catch(renderError){
+      console.error('Errore rendering:',renderError);
+      toast('Dati sincronizzati');
+      return;
+    }
+    toast('Dati sincronizzati');
+  }catch(e){
+    console.error('Errore sincronizzazione:',e);
+    // Mostra il banner di configurazione solo se URL/token sono realmente assenti.
+    // Un errore temporaneo di rete non deve far credere che la configurazione sia persa.
+    updateSetupBanner();
+    toast(e.message);
+  }
+}
 
 function renderAll(){renderDashboard();renderPressure();renderWeight();renderLabs();renderDiets();renderMeds();renderCompareSelectors();renderBeforeAfterSelectors();renderTimeline();initReportDates();renderReport();}
 function renderDashboard(){const cutoff=new Date();cutoff.setDate(cutoff.getDate()-7);const p7=S.PRESSURE.filter(x=>new Date(x.datetime)>=cutoff);const sy=avg(p7.map(x=>x.systolic)),di=avg(p7.map(x=>x.diastolic)),pu=avg(p7.map(x=>x.pulse).filter(Boolean));$('#bp7').textContent=sy?`${Math.round(sy)}/${Math.round(di)} mmHg`:'—';$('#bp7pulse').textContent=pu?`${Math.round(pu)} bpm`:'Nessun dato';const ws=[...S.WEIGHT].sort((a,b)=>String(a.date).localeCompare(String(b.date)));const lw=ws.at(-1);$('#lastWeight').textContent=lw?`${Number(lw.weightKg).toFixed(1)} kg`:'—';$('#weightChange').textContent=ws.length>1?`${(Number(lw.weightKg)-Number(ws[0].weightKg)).toFixed(1)} kg dal primo dato`:'—';const c30=new Date();c30.setDate(c30.getDate()-30);$('#count30').textContent=S.PRESSURE.filter(x=>new Date(x.datetime)>=c30).length;const active=S.DIETS.filter(d=>d.startDate<=today()&&(!d.endDate||d.endDate>=today())).sort((a,b)=>String(b.startDate).localeCompare(String(a.startDate)))[0];$('#currentDiet').textContent=active?.name||'Nessuno';$('#dietSince').textContent=active?`dal ${dateFmt(active.startDate)}`:'—';renderTrend();renderRecent()}
@@ -65,7 +100,7 @@ $$('[data-tab]').forEach(b=>b.onclick=()=>openTab(b.dataset.tab));
 $$('[data-modal]').forEach(b=>b.onclick=()=>{const d=$('#'+b.dataset.modal),f=d.querySelector('form');if(f){f.reset();if(f.elements.id)f.elements.id.value='';if(f.elements.datetime)f.elements.datetime.value=nowLocal();if(f.elements.date)f.elements.date.value=today();if(f.elements.startDate)f.elements.startDate.value=today();if(f.elements.active)f.elements.active.checked=true}d.showModal()});
 $$('[data-close]').forEach(b=>b.onclick=()=>b.closest('dialog').close());
 $('#settingsBtn').onclick=()=>{$('#apiUrl').value=cfg().url;$('#apiToken').value=cfg().token;$('#settingsModal').showModal()};$$('[data-open-settings]').forEach(b=>b.onclick=()=>$('#settingsBtn').click());$('#themeBtn').onclick=()=>applyTheme(document.body.classList.contains('dark')?'light':'dark');
-$('#saveSettings').onclick=e=>{e.preventDefault();localStorage.setItem('hm_api_url',$('#apiUrl').value.trim());localStorage.setItem('hm_api_token',$('#apiToken').value.trim());$('#settingsModal').close();refresh()};
+$('#saveSettings').onclick=e=>{e.preventDefault();localStorage.setItem('hm_api_url',$('#apiUrl').value.trim());localStorage.setItem('hm_api_token',$('#apiToken').value.trim());updateSetupBanner();$('#settingsModal').close();refresh()};
 $$('.dataForm').forEach(form=>form.addEventListener('submit',async e=>{
   e.preventDefault();
   if(!form.reportValidity()) return;

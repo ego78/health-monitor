@@ -110,3 +110,11 @@ Corretto l'invio POST verso Google Apps Script usando `application/x-www-form-ur
 
 ### Aggiornamento database
 Questa versione aggiunge colonne opzionali al foglio PRESSURE. Dopo aver copiato il nuovo Code.gs, eseguire `setupDatabase()` una volta e poi creare una nuova distribuzione della Web App Apps Script. I dati esistenti non vengono eliminati.
+
+
+## V2.7.1 — correzione banner configurazione
+- Il banner giallo viene mostrato solo quando endpoint Apps Script o token sono realmente mancanti.
+- Dopo una connessione API riuscita il banner viene nascosto immediatamente.
+- Un eventuale errore grafico successivo al caricamento non fa più riapparire il messaggio di configurazione.
+- Gli errori temporanei di rete non vengono più confusi con una configurazione mancante.
+- Nessuna modifica al database o a Code.gs rispetto alla V2.7.
