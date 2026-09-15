@@ -118,3 +118,19 @@ Questa versione aggiunge colonne opzionali al foglio PRESSURE. Dopo aver copiato
 - Un eventuale errore grafico successivo al caricamento non fa più riapparire il messaggio di configurazione.
 - Gli errori temporanei di rete non vengono più confusi con una configurazione mancante.
 - Nessuna modifica al database o a Code.gs rispetto alla V2.7.
+
+
+# Health Monitor V3.0
+Nuove funzioni:
+- schermata Oggi con pressione, peso, alimentazione e piano attivo;
+- diario alimentare con kcal, proteine, grassi e carboidrati e barre rispetto al target;
+- aderenza giornaliera a farmaci/integratori (Assunto/Salta);
+- timer da 1 minuto per sessioni pressorie guidate;
+- analisi raggruppate automaticamente per data di prelievo e laboratorio;
+- Esplora dati: grafico combinato pressione/peso/alimentazione/analisi;
+- ricerca e filtri nello storico;
+- coda offline locale per pasti e aderenza, con sincronizzazione al ritorno della rete;
+- ripristino backup JSON con protezione dai duplicati;
+- compatibilità con tutti i dati V2.x.
+
+INSTALLAZIONE: aggiornare i file GitHub; copiare il nuovo Code.gs in Apps Script; eseguire setupDatabase() una volta; creare una nuova distribuzione della Web App. setupDatabase aggiunge MEALS e INTAKE senza cancellare i fogli esistenti.

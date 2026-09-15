@@ -20,6 +20,7 @@
     <div class="brand"><img src="icons/icon-96.png" alt=""><div><strong>Health Monitor</strong><small>I tuoi dati, la tua salute</small></div></div>
     <nav class="side-nav">
       <button class="active" data-tab="dashboard"><span>⌂</span>Dashboard</button>
+      <button data-tab="todayView"><span>✓</span>Oggi</button>
       <button data-tab="pressure"><span>♥</span>Pressione</button>
       <button data-tab="weight"><span>⚖</span>Peso</button>
       <button data-tab="labs"><span>⚗</span>Analisi</button>
@@ -28,10 +29,11 @@
       <button data-tab="compare"><span>▥</span>Confronta</button>
       <button data-tab="timeline"><span>◷</span>Timeline salute</button>
       <button data-tab="report"><span>▤</span>Report</button>
+      <button data-tab="explore"><span>⌁</span>Esplora dati</button>
       <button data-tab="data"><span>⇩</span>Dati & backup</button>
     </nav>
     <div class="sidebar-note"><span>☀</span><p>Piccoli passi,<br><strong>grandi risultati.</strong></p></div>
-    <div class="version">Health Monitor V2.7</div>
+    <div class="version">Health Monitor V3.0</div>
   </aside>
 
   <div class="content-wrap">
@@ -75,12 +77,39 @@
 
       <section id="pressure" class="view"><div class="sectionHead"><div><h1>Pressione</h1><p>Sessioni da 1, 2 o 3 misurazioni con media automatica</p></div><button class="primary" data-modal="pressureModal">＋ Misurazione</button></div><div class="metric-grid compact"><article class="metric red"><div><span>Media 7 giorni</span><strong id="bpWeek">—</strong></div></article><article class="metric blue"><div><span>Media 30 giorni</span><strong id="bpMonth">—</strong></div></article><article class="metric green"><div><span>Mattina</span><strong id="bpMorning">—</strong></div></article><article class="metric amber"><div><span>Sera</span><strong id="bpEvening">—</strong></div></article></div><div class="panel"><div class="chart-box"><canvas id="pressureChart"></canvas></div></div><div class="panel table-panel"><div id="pressureTable"></div></div></section>
       <section id="weight" class="view"><div class="sectionHead"><div><h1>Peso corporeo</h1><p>Monitora peso e circonferenza vita</p></div><button class="primary" data-modal="weightModal">＋ Peso</button></div><div class="panel"><div class="chart-box"><canvas id="weightChart"></canvas></div></div><div class="panel table-panel"><div id="weightTable"></div></div></section>
-      <section id="labs" class="view"><div class="sectionHead"><div><h1>Analisi</h1><p>Inserisci qualsiasi parametro di laboratorio</p></div><button class="primary" data-modal="labModal">＋ Valore</button></div><div class="filters"><input id="labSearch" placeholder="Cerca parametro…"><select id="labParameter"></select></div><div class="panel"><div class="chart-box"><canvas id="labChart"></canvas></div></div><div class="panel table-panel"><div id="labTable"></div></div></section>
+      <section id="labs" class="view"><div class="sectionHead"><div><h1>Analisi</h1><p>Inserisci qualsiasi parametro di laboratorio</p></div><button class="primary" data-modal="labModal">＋ Valore</button></div><div class="filters"><input id="labSearch" placeholder="Cerca parametro…"><select id="labParameter"></select></div><div class="panel"><div class="chart-box"><canvas id="labChart"></canvas></div></div><div class="panel"><div class="panelHead"><div><h2>Prelievi</h2><p>Parametri raggruppati per data e laboratorio</p></div></div><div id="labBatches" class="labBatches"></div></div><div class="panel table-panel"><div id="labTable"></div></div></section>
       <section id="diets" class="view"><div class="sectionHead"><div><h1>Periodi alimentari</h1><p>Confronta calorie, macro, peso e pressione nel tempo</p></div><button class="primary" data-modal="dietModal">＋ Periodo</button></div><div class="panel"><div class="panelHead"><div><h2>Macronutrienti dei piani</h2><p>Proteine, grassi e carboidrati impostati per ciascun periodo</p></div></div><div class="chart-box"><canvas id="macroChart"></canvas></div></div><div id="dietCards" class="timelineCards"></div></section>
       <section id="meds" class="view"><div class="sectionHead"><div><h1>Farmaci e integratori</h1><p>Registra dose, frequenza e periodo di utilizzo</p></div><button class="primary" data-modal="medModal">＋ Inserisci</button></div><div class="filters"><select id="medTypeFilter"><option value="">Tutti</option><option>Farmaco</option><option>Integratore</option></select><select id="medActiveFilter"><option value="">Tutti</option><option value="true">Attivi</option><option value="false">Terminati</option></select></div><div id="medCards" class="timelineCards"></div></section>
       <section id="compare" class="view"><div class="sectionHead"><div><h1>Confronta</h1><p>Analizza cosa cambia nei diversi periodi</p></div></div><div class="panel beforeAfter"><div class="panelHead"><div><h2>Prima / Dopo un evento</h2><p>Confronta automaticamente i giorni prima e dopo l’inizio di una dieta, farmaco o integratore.</p></div></div><div class="compareControls"><label>Evento<select id="eventCompare"></select></label><label>Finestra<select id="eventDays"><option value="7">7 giorni</option><option value="14">14 giorni</option><option value="30" selected>30 giorni</option><option value="60">60 giorni</option></select></label><button id="runBeforeAfter" class="primary">Confronta prima/dopo</button></div><div id="beforeAfterResults" class="beforeAfterGrid"></div></div><div class="panel compareControls"><label>Da<input type="date" id="cmpFrom"></label><label>A<input type="date" id="cmpTo"></label><label class="check"><input type="checkbox" id="cmpBP" checked> Pressione</label><label class="check"><input type="checkbox" id="cmpWeight" checked> Peso</label><label>Analisi<select id="cmpLab"><option value="">Nessuna</option></select></label><button id="runCompare" class="primary">Aggiorna confronto</button></div><div class="metric-grid compact"><article class="metric"><div><span>Sistolica media</span><strong id="cmpSys">—</strong></div></article><article class="metric"><div><span>Diastolica media</span><strong id="cmpDia">—</strong></div></article><article class="metric"><div><span>Variazione peso</span><strong id="cmpW">—</strong></div></article><article class="metric"><div><span>Misurazioni</span><strong id="cmpN">—</strong></div></article></div><div class="panel"><div class="chart-box tall"><canvas id="compareChart"></canvas></div></div><div class="panel"><h2>Periodi sovrapposti</h2><div id="overlapTimeline"></div></div><div class="notice">I confronti mostrano associazioni temporali nei tuoi dati. Non dimostrano che dieta, farmaci o integratori abbiano causato un cambiamento.</div></section>
       <section id="timeline" class="view"><div class="sectionHead"><div><h1>Timeline salute</h1><p>Tutti gli eventi sanitari ordinati nel tempo</p></div></div><div class="panel compareControls"><label>Da<input type="date" id="timelineFrom"></label><label>A<input type="date" id="timelineTo"></label><label>Tipo<select id="timelineType"><option value="">Tutti</option><option value="Pressione">Pressione</option><option value="Peso">Peso</option><option value="Analisi">Analisi</option><option value="Dieta">Dieta</option><option value="Farmaco">Farmaco</option><option value="Integratore">Integratore</option></select></label><button id="refreshTimeline" class="primary">Aggiorna</button></div><div id="healthTimeline" class="healthTimeline"></div></section>
       <section id="report" class="view"><div class="sectionHead"><div><h1>Report salute</h1><p>Riepilogo del periodo da mostrare o stampare per il medico</p></div></div><div class="panel reportControls"><label>Periodo<select id="reportPreset"><option value="30">Ultimi 30 giorni</option><option value="90" selected>Ultimi 3 mesi</option><option value="180">Ultimi 6 mesi</option><option value="365">Ultimo anno</option><option value="custom">Personalizzato</option></select></label><label>Da<input type="date" id="reportFrom"></label><label>A<input type="date" id="reportTo"></label><button id="buildReport" class="primary">Genera report</button><button id="printReport">Stampa / salva PDF</button></div><div id="reportContent" class="reportContent panel"></div></section>
+
+      <section id="todayView" class="view">
+        <div class="sectionHead"><div><h1>Oggi</h1><p>La tua giornata in un'unica schermata</p></div><input id="todayDate" type="date" class="dateCompact"></div>
+        <div id="todaySummary" class="todayGrid"></div>
+        <div class="panel"><div class="panelHead"><div><h2>Diario alimentare</h2><p>Confronta ciò che mangi con il piano alimentare attivo</p></div><button class="primary" data-modal="mealModal">＋ Pasto</button></div><div id="macroProgress"></div><div id="todayMeals" class="todayList"></div></div>
+        <div class="panel"><div class="panelHead"><div><h2>Farmaci e integratori</h2><p>Segna le assunzioni della giornata</p></div></div><div id="todayMeds" class="todayList"></div></div>
+        <div class="panel"><div class="panelHead"><div><h2>Pressione guidata</h2><p>Puoi usare il timer tra una misurazione e la successiva</p></div><button id="startBpTimer" class="secondary">Avvia timer 1 min</button></div><div id="bpTimer" class="timerBox">01:00</div><button class="primary wideBtn" data-modal="pressureModal">＋ Registra sessione</button></div>
+      </section>
+
+      <section id="explore" class="view">
+        <div class="sectionHead"><div><h1>Esplora i dati</h1><p>Sovrapponi indicatori e filtra lo storico</p></div></div>
+        <div class="panel compareControls v3Controls">
+          <label>Da<input type="date" id="exploreFrom"></label><label>A<input type="date" id="exploreTo"></label>
+          <label class="check"><input type="checkbox" id="exSys" checked> Sistolica</label>
+          <label class="check"><input type="checkbox" id="exDia" checked> Diastolica</label>
+          <label class="check"><input type="checkbox" id="exWeight" checked> Peso</label>
+          <label class="check"><input type="checkbox" id="exKcal"> Kcal</label>
+          <label class="check"><input type="checkbox" id="exProtein"> Proteine</label>
+          <label class="check"><input type="checkbox" id="exCarbs"> Carboidrati</label>
+          <label class="check"><input type="checkbox" id="exFat"> Grassi</label>
+          <label>Analisi<select id="exLab"><option value="">Nessuna</option></select></label>
+          <button id="runExplore" class="primary">Aggiorna grafico</button>
+        </div>
+        <div class="panel"><div class="chart-box tall"><canvas id="exploreChart"></canvas></div><div id="explorePeriods" class="periodBands"></div></div>
+        <div class="panel"><div class="panelHead"><div><h2>Ricerca storico</h2><p>Filtra rapidamente tutti gli eventi registrati</p></div></div><div class="filters"><input id="historySearch" placeholder="Cerca dieta, farmaco, analisi, nota…"><select id="historyType"><option value="">Tutti</option><option>Pressione</option><option>Peso</option><option>Analisi</option><option>Dieta</option><option>Farmaco</option><option>Integratore</option><option>Pasto</option></select></div><div id="historyResults" class="todayList"></div></div>
+      </section>
+
       <section id="data" class="view"><div class="sectionHead"><div><h1>Dati & backup</h1><p>Sincronizzazione ed esportazione dei tuoi dati</p></div></div><div class="panel actions"><button id="refreshBtn">↻ Sincronizza</button><button id="exportJsonBtn">Esporta JSON</button><button id="exportCsvBtn">Esporta CSV</button></div><div class="panel"><h2>Privacy e archiviazione</h2><p>Tutti i dati sanitari restano nel tuo Google Sheet. GitHub contiene solo il codice dell'interfaccia.</p><p class="muted">Il token è salvato localmente nel browser e non deve essere inserito nel repository.</p></div></section>
     </main>
   </div>
@@ -88,9 +117,9 @@
 
 <nav class="mobile-nav" aria-label="Menu principale smartphone">
   <button class="active" data-tab="dashboard"><span class="navIcon">⌂</span><small>Home</small></button>
+  <button data-tab="todayView"><span class="navIcon">✓</span><small>Oggi</small></button>
   <button data-tab="pressure"><span class="navIcon">♥</span><small>Pressione</small></button>
   <button data-tab="weight"><span class="navIcon">▣</span><small>Peso</small></button>
-  <button data-tab="labs"><span class="navIcon">⚗</span><small>Analisi</small></button>
   <button type="button" id="mobileMoreBtn"><span class="navIcon navDots">•••</span><small>Altro</small></button>
 </nav>
 <div class="mobile-more-backdrop" id="mobileMoreBackdrop" aria-hidden="true"></div>
@@ -122,7 +151,11 @@
   <dialog id="medModal"><form class="modalForm dataForm" data-entity="MEDS"><div class="modalTitle"><span class="modalIcon meds">✚</span><div><h2>Farmaco / integratore</h2><p>Registra una terapia o un'integrazione.</p></div></div><input type="hidden" name="id"><label>Tipo<select name="type" required><option>Farmaco</option><option>Integratore</option></select></label><label>Nome<input name="name" required></label><div class="grid2"><label>Dose<input name="dose"></label><label>Unità<input name="unit" placeholder="mg, UI, compresse…"></label></div><label>Frequenza<input name="frequency" placeholder="1 volta/die, al bisogno…"></label><label>Orario<input name="timeOfDay" placeholder="Mattina, sera, 08:00…"></label><div class="grid2"><label>Inizio<input type="date" name="startDate" required></label><label>Fine<input type="date" name="endDate"></label></div><label class="check"><input type="checkbox" name="active" checked> Attivo</label><label>Note<textarea name="notes"></textarea></label><div class="modalActions"><button type="button" data-close class="btnCancel"><span>×</span> Annulla</button><button class="primary btnSave"><span>✓</span> Salva</button></div></form></dialog>
 
 
+
+  <dialog id="mealModal"><form class="modalForm" id="mealForm"><div class="modalTitle"><span class="modalIcon diet">🍽</span><div><h2>Nuovo pasto</h2><p>Registra calorie e macronutrienti.</p></div></div><label>Data<input type="date" name="date" required></label><label>Pasto<select name="mealType"><option>Colazione</option><option>Spuntino</option><option>Pranzo</option><option>Merenda</option><option>Cena</option><option>Altro</option></select></label><label>Descrizione<input name="name" placeholder="Es. yogurt, fragole e avocado" required></label><div class="grid2"><label>Calorie<input type="number" name="kcal" min="0" step="1"></label><label>Proteine (g)<input type="number" name="proteinG" min="0" step="0.1"></label></div><div class="grid2"><label>Grassi (g)<input type="number" name="fatG" min="0" step="0.1"></label><label>Carboidrati (g)<input type="number" name="carbsG" min="0" step="0.1"></label></div><label>Note<textarea name="notes"></textarea></label><div class="modalActions"><button type="button" data-close class="btnCancel"><span>×</span> Annulla</button><button class="primary btnSave"><span>✓</span> Salva pasto</button></div></form></dialog>
+
   <div id="toast" class="toast"></div>
   <script src="app.js"></script>
+  <script src="v3.js"></script>
 </body>
 </html>

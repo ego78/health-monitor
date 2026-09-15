@@ -1,4 +1,4 @@
-const APP_VERSION = '2.7.0';
+const APP_VERSION = '3.0.0';
 const SHEETS = {
   PRESSURE: ['id','datetime','systolic','diastolic','pulse','period','readingsCount','systolic1','diastolic1','pulse1','systolic2','diastolic2','pulse2','systolic3','diastolic3','pulse3','position','arm','context','notes','createdAt'],
   WEIGHT: ['id','date','weightKg','waistCm','notes','createdAt'],
@@ -6,6 +6,8 @@ const SHEETS = {
   DIETS: ['id','name','startDate','endDate','kcal','carbsG','proteinG','fatG','weightStart','weightEnd','notes','createdAt'],
   MEDS: ['id','type','name','dose','unit','frequency','timeOfDay','startDate','endDate','active','notes','createdAt'],
   EVENTS: ['id','date','category','title','details','createdAt'],
+  MEALS: ['id','date','mealType','name','kcal','proteinG','fatG','carbsG','notes','createdAt'],
+  INTAKE: ['id','date','medId','medName','status','scheduledTime','takenAt','notes','createdAt'],
   SETTINGS: ['key','value']
 };
 
