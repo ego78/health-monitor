@@ -154,3 +154,7 @@ Corretto il pulsante centrale Inserisci: il pannello di registrazione rapida vie
 
 ## V3.2.2 — Nuova icona Opzione 2
 Applicata l'icona scelta: figura umana stilizzata blu/ciano con linea ECG su fondo chiaro. Generate tutte le dimensioni PWA, Apple Touch e versioni maskable. Funzioni e database invariati rispetto alla V3.2.1.
+
+
+## V3.2.3 — Cartella icons
+Tutte le nuove icone sono ora nella cartella `icons/`. Aggiornati automaticamente index.html, manifest.json e service worker con i nuovi percorsi. Funzioni dell'app invariate.
