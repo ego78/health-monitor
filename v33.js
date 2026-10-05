@@ -32,20 +32,32 @@ function renderInsights(){
 
 function renderPressureAdvanced(){
  const box=q('#pressureAdvancedMetrics'),can=q('#pressureAdvancedChart');if(!box||!can)return;
- const t=today33(),p=bpRange(addDays(t,-89),t).sort((a,b)=>new Date(a.datetime)-new Date(b.datetime));
- const m=p.filter(x=>String(x.period).toLowerCase().includes('matt')),e=p.filter(x=>String(x.period).toLowerCase().includes('ser'));
- const pp=p.map(x=>num(x.systolic)-num(x.diastolic)),pulse=p.filter(x=>x.pulse).map(x=>num(x.pulse));
- box.innerHTML=`<article><small>Media 90 gg</small><b>${p.length?fmt(mean(p.map(x=>num(x.systolic))))+'/'+fmt(mean(p.map(x=>num(x.diastolic)))):'—'}</b></article>
- <article><small>Differenziale media</small><b>${pp.length?fmt(mean(pp))+' mmHg':'—'}</b></article>
- <article><small>Battiti medi</small><b>${pulse.length?fmt(mean(pulse))+' bpm':'—'}</b></article>
- <article><small>Mattina vs sera</small><b>${m.length&&e.length?fmt(mean(m.map(x=>num(x.systolic)))-mean(e.map(x=>num(x.systolic))))+' SYS':'—'}</b></article>`;
+ const all=(S.PRESSURE||[]).map(x=>{const dt=new Date(x.datetime);return {...x,_dt:dt,_ts:isNaN(dt)?0:dt.getTime()}}).filter(x=>x._ts).sort((a,b)=>a._ts-b._ts);
+ const now=Date.now(),p=all.filter(x=>x._ts>=now-90*86400000);
+ const vals=(arr,k)=>arr.map(x=>num(x[k])).filter(v=>Number.isFinite(v)&&v>0);
+ const pp=p.map(x=>num(x.systolic)-num(x.diastolic)).filter(Number.isFinite), pulse=vals(p,'pulse');
+ const hr=x=>x._dt.getHours();
+ const morning=p.filter(x=>String(x.period||'').toLowerCase().includes('matt')||(!x.period&&hr(x)>=4&&hr(x)<14));
+ const evening=p.filter(x=>String(x.period||'').toLowerCase().includes('ser')||(!x.period&&hr(x)>=17));
+ const pair=arr=>arr.length?`${Math.round(mean(vals(arr,'systolic')))}/${Math.round(mean(vals(arr,'diastolic')))}`:'—';
+ const p7=p.filter(x=>x._ts>=now-7*86400000),p30=p.filter(x=>x._ts>=now-30*86400000);
+ const md=morning.length&&evening.length?Math.round(mean(vals(evening,'systolic'))-mean(vals(morning,'systolic'))):null;
+ box.innerHTML=`<article><small>Media 7 gg</small><b>${pair(p7)}</b><span>${p7.length} mis.</span></article>
+ <article><small>Media 30 gg</small><b>${pair(p30)}</b><span>${p30.length} mis.</span></article>
+ <article><small>Media 90 gg</small><b>${pair(p)}</b><span>${p.length} mis.</span></article>
+ <article><small>Differenziale media</small><b>${pp.length?Math.round(mean(pp))+' mmHg':'—'}</b><span>SYS − DIA</span></article>
+ <article><small>Battiti medi</small><b>${pulse.length?Math.round(mean(pulse))+' bpm':'—'}</b><span>${pulse.length} valori</span></article>
+ <article><small>Mattina</small><b>${pair(morning)}</b><span>${morning.length} mis.</span></article>
+ <article><small>Sera</small><b>${pair(evening)}</b><span>${evening.length} mis.</span></article>
+ <article><small>Mattina vs sera</small><b>${md==null?'—':(md>=0?'+':'')+md+' SYS'}</b><span>differenza sistolica</span></article>`;
  if(advChart)advChart.destroy();
+ if(!p.length){can.style.display='none';return}
+ can.style.display='';
  advChart=new Chart(can,{type:'line',data:{labels:p.map(x=>dateFmt(d10(x.datetime))),datasets:[
-  {label:'SYS',data:p.map(x=>num(x.systolic)),tension:.25},{label:'DIA',data:p.map(x=>num(x.diastolic)),tension:.25},
-  {label:'Differenziale',data:p.map(x=>num(x.systolic)-num(x.diastolic)),tension:.25,hidden:true}
- ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false}}});
+ {label:'SYS',data:p.map(x=>num(x.systolic)||null),tension:.25},{label:'DIA',data:p.map(x=>num(x.diastolic)||null),tension:.25},
+ {label:'Differenziale',data:p.map(x=>num(x.systolic)-num(x.diastolic)),tension:.25,hidden:true}]},
+ options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},scales:{y:{suggestedMin:60,suggestedMax:160}}}});
 }
-
 function labStatus(x){const v=num(x.value),lo=x.refMin===''||x.refMin==null?null:num(x.refMin),hi=x.refMax===''||x.refMax==null?null:num(x.refMax);if(lo!=null&&v<lo)return['Basso','low'];if(hi!=null&&v>hi)return['Alto','high'];if(lo!=null||hi!=null)return['Nel range','normal'];return['Senza range','neutral']}
 function renderLabAdvanced(){
  const box=q('#labAdvancedSummary');if(!box)return;const param=q('#labParameter')?.value||'';
